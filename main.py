@@ -42,13 +42,13 @@ class TextAndChoice:
     def remove(self):
         if self.isEnd():
             print("No path available")
-        elif len(self) > 1:
+        elif len(self) >= 1:
             print("Which path?")
             self.show_choice()
             to_del = self.selector()
             for x in self.path:
                 if to_del.text == x.text:
-                    self.path.pop(x)
+                    self.path.remove(x)
 
     def to_start(self):
         to_start = self
@@ -71,6 +71,7 @@ class TextAndChoice:
     """
         Menu-Start
     """
+
     def menu_choice(self, selector):
         if selector == 'a':
             self.set_text()
