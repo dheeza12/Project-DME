@@ -8,19 +8,30 @@ class TextAndChoice:
         self.back = back
         self.path = []
 
+    """ 
+    
+    Encode to dict for JSON dump
+    
+    """
     def encode(self):
         dict_ = {}
         path = []
         dict_['text'] = self.text
         dict_['choice_text'] = self.choice_text
         if len(self) > 0:
-            path = [x.encode() for x in self.path]
+            path.extend([x.encode() for x in self.path])
         dict_['path'] = path
         return dict_
 
     @staticmethod
-    def decode(**dict_):
-        pass
+    def decode(dict_):
+        text = dict_['text']
+        choice_text = dict_['choice_text']
+        root = TextAndChoice(text=text, choice_text=choice_text)
+        if len(dict_['path']) > 0:
+            for x in dict_['path']:
+                root.path.append(root.decode(x))
+        return root
 
     def selector(self):
         selector = input(": ")
@@ -162,7 +173,7 @@ class TextAndChoice:
         return len(self.path)
 
 
-# Encode to dict
+
 
 # Dumping to JSON
 
@@ -176,5 +187,8 @@ if __name__ == '__main__':
     root.add_path("You died1", "You kys1")
     root.add_path("You died2", "You kys2")
     root.path[0].add_path("You died1.1", "You kys1.2")
-    root.menu()
-    print(root.encode())
+
+    x = root.encode()
+    print(x)
+    new_root = TextAndChoice.decode(x)
+    new_root.menu()
