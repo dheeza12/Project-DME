@@ -10,7 +10,7 @@ class TextAndChoice:
 
     def encode(self):
         dict_ = {}
-        path = {}
+        path = []
         dict_['text'] = self.text
         dict_['choice_text'] = self.choice_text
         if len(self) > 0:
@@ -136,8 +136,9 @@ class TextAndChoice:
             """)
         q = self.menu_choice(input(": "))
         if q is None:
-            exit()
-        q.menu()
+            pass
+        else:
+            q.menu()
 
     """
         Menu-End
@@ -176,3 +177,4 @@ if __name__ == '__main__':
     root.add_path("You died2", "You kys2")
     root.path[0].add_path("You died1.1", "You kys1.2")
     root.menu()
+    print(root.encode())
