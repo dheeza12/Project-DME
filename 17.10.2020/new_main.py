@@ -105,19 +105,18 @@ class TextAndChoice:
         json.dump(x, f)
         f.close()
         self.menu()
-    
-    def load_present(self):
+
+    @staticmethod
+    def load_present():
         file_name = input("file name to load: ")
         f = open(file_name + ".json", "r")
         x = json.load(f)
         f.close()
-        print(x)
-        r = TextAndChoice.decode(x)
-        r.menu()
+        read = TextAndChoice.decode(x)
+        return read
     """
         Menu-Start
     """
-
     def menu_choice(self, selector):
         if selector == 'a':
             self.set_text()
@@ -185,7 +184,7 @@ class TextAndChoice:
     """
     def play(self):
         print(self)
-        if not self.is_end():
+        if not self.is_end():   # self.path represent by self
             selector = None
             if len(self) > 1:
                 self.show_choice()
