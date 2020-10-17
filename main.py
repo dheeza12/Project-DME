@@ -1,17 +1,11 @@
-# Tree Node
-
-
 class TextAndChoice:
-    def __init__(self, text="Welcome to the start", choice_text=None, back=None):
+    def __init__(self, text="This is the start, you can change the text", choice_text=None, back=None):
         self.text = text
         self.choice_text = choice_text
         self.back = back
         self.path = []
-
     """ 
-    
         Encode to dict for JSON dump
-    
     """
     def encode(self):
         dict_ = {}
@@ -23,9 +17,7 @@ class TextAndChoice:
         dict_['path'] = path
         return dict_
     """
-    
         Decode from dict to construct the TextAndChoice
-    
     """
     @staticmethod
     def decode(dict_):
@@ -37,6 +29,7 @@ class TextAndChoice:
                 root.add_path(root.decode(x))
         return root
 
+    # For selecting number
     def selector(self):
         selector = input(": ")
         selector = int(selector)
@@ -181,11 +174,11 @@ class TextAndChoice:
 
 if __name__ == '__main__':
     root = TextAndChoice()
-    node = TextAndChoice("You died1", "You kys1")
+    node = TextAndChoice("This is the consequence of path1", "This is path1")
     root.add_path(node)
-    node = TextAndChoice("You died2", "You kys2")
+    node = TextAndChoice("You chose path2", "This is path2")
     root.add_path(node)
-    node = TextAndChoice("You died1.1", "You kys1.2")
+    node = TextAndChoice("You chose path1 then there is only 1 path to continue, so the program jump to the consequence", "Ask for holy grail")
     root.path[0].add_path(node)
     """
     Encode to dict
