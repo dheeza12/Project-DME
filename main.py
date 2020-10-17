@@ -155,15 +155,18 @@ class TextAndChoice:
         
     """
     def play(self):
+        print()
         print(self)
         if not self.is_end():
             selector = None
             if len(self) > 1:
+                print()
                 self.show_choice()
                 selector = input("Input: ")
             if selector == '' or selector is None:
                 selector = 1
             self.path[int(selector) - 1].play()
+            input("Press Enter to exit... ")
 
     def __str__(self):
         return self.text
