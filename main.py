@@ -30,7 +30,7 @@ class TextAndChoice:
         root = TextAndChoice(text=text, choice_text=choice_text)
         if len(dict_['path']) > 0:
             for x in dict_['path']:
-                root.path.append(root.decode(x))
+                root.add_path(root.decode(x))
         return root
 
     def selector(self):
@@ -59,8 +59,8 @@ class TextAndChoice:
             return True
         return False
 
-    def add_path(self, text, choice_text=None):
-        path = TextAndChoice(text, choice_text)
+    def add_path(self, node):
+        path = node
         path.back = self
         self.path.append(path)
 
@@ -108,7 +108,8 @@ class TextAndChoice:
             text = input("Text to show after choosing: ")
             if choice == '':
                 choice = None
-            self.add_path(text, choice)
+            add = TextAndChoice(text=text, choice_text=choice)
+            self.add_path(add)
         elif selector == 'd':
             self.remove()
 
@@ -184,10 +185,12 @@ class TextAndChoice:
 
 if __name__ == '__main__':
     root = TextAndChoice()
-    root.add_path("You died1", "You kys1")
-    root.add_path("You died2", "You kys2")
-    root.path[0].add_path("You died1.1", "You kys1.2")
-
+    node = TextAndChoice("You died1", "You kys1")
+    root.add_path(node)
+    node = TextAndChoice("You died2", "You kys2")
+    root.add_path(node)
+    node = TextAndChoice("You died1.1", "You kys1.2")
+    root.path[0].add_path(node)
     x = root.encode()
     print(x)
     new_root = TextAndChoice.decode(x)
