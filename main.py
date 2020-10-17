@@ -81,7 +81,7 @@ class TextAndChoice:
 
     def to_start(self):
         to_start = self
-        while to_start.back:
+        while to_start.back is not None:
             to_start = self.back
         return to_start
 
