@@ -10,7 +10,7 @@ class TextAndChoice:
 
     """ 
     
-    Encode to dict for JSON dump
+        Encode to dict for JSON dump
     
     """
     def encode(self):
@@ -22,7 +22,11 @@ class TextAndChoice:
             path.extend([x.encode() for x in self.path])
         dict_['path'] = path
         return dict_
-
+    """
+    
+        Decode from dict to construct the TextAndChoice
+    
+    """
     @staticmethod
     def decode(dict_):
         text = dict_['text']
@@ -151,11 +155,11 @@ class TextAndChoice:
             pass
         else:
             q.menu()
-
     """
+    
         Menu-End
+        
     """
-
     def play(self):
         print(self)
         if not self.is_end():
@@ -174,15 +178,6 @@ class TextAndChoice:
         return len(self.path)
 
 
-
-
-# Dumping to JSON
-
-# Load from JSON
-
-# Decode from JSON
-
-
 if __name__ == '__main__':
     root = TextAndChoice()
     node = TextAndChoice("You died1", "You kys1")
@@ -191,7 +186,12 @@ if __name__ == '__main__':
     root.add_path(node)
     node = TextAndChoice("You died1.1", "You kys1.2")
     root.path[0].add_path(node)
+    """
+    Encode to dict
+    """
     x = root.encode()
-    print(x)
+    """
+    Decode from dict
+    """
     new_root = TextAndChoice.decode(x)
     new_root.menu()
