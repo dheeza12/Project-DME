@@ -139,6 +139,7 @@ class TextAndChoice:
         print(f'The text is: {self}')
         print("The paths currently are:")
         self.show_choice()
+        print()
         print("""What do you want to do?
             a. Change text
             b. Change/Add choice text for the path
