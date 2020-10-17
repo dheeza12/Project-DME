@@ -4,9 +4,23 @@
 class TextAndChoice:
     def __init__(self, text="Welcome to the start", choice_text=None, back=None):
         self.text = text
-        self.back = back
         self.choice_text = choice_text
+        self.back = back
         self.path = []
+
+    def encode(self):
+        dict_ = {}
+        path = {}
+        dict_['text'] = self.text
+        dict_['choice_text'] = self.choice_text
+        if len(self) > 0:
+            path = [x.encode() for x in self.path]
+        dict_['path'] = path
+        return dict_
+
+    @staticmethod
+    def decode(**dict_):
+        pass
 
     def selector(self):
         selector = input(": ")
@@ -20,7 +34,7 @@ class TextAndChoice:
 
     # set choice for the numbered path
     def set_choice(self):
-        if self.isEnd():
+        if self.is_end():
             print("No choice to change")
         else:
             print("Which path?")
@@ -29,7 +43,7 @@ class TextAndChoice:
             new_text = input("Enter new choice text: ")
             path.choice_text = new_text
 
-    def isEnd(self):
+    def is_end(self):
         if len(self) < 1:
             return True
         return False
@@ -40,7 +54,7 @@ class TextAndChoice:
         self.path.append(path)
 
     def remove(self):
-        if self.isEnd():
+        if self.is_end():
             print("No path available")
         elif len(self) >= 1:
             print("Which path?")
@@ -57,9 +71,10 @@ class TextAndChoice:
         return to_start
 
     def next_path(self):
-        if self.isEnd():
+        if self.is_end():
             print("No path available")
-        elif len(self) > 1:
+            return self
+        elif len(self) >= 1:
             print("Which path?")
             self.show_choice()
             return self.selector()
@@ -130,7 +145,7 @@ class TextAndChoice:
 
     def play(self):
         print(self)
-        if not self.isEnd():
+        if not self.is_end():
             selector = None
             if len(self) > 1:
                 self.show_choice()
@@ -145,6 +160,7 @@ class TextAndChoice:
     def __len__(self):
         return len(self.path)
 
+
 # Encode to dict
 
 # Dumping to JSON
@@ -156,4 +172,7 @@ class TextAndChoice:
 
 if __name__ == '__main__':
     root = TextAndChoice()
+    root.add_path("You died1", "You kys1")
+    root.add_path("You died2", "You kys2")
+    root.path[0].add_path("You died1.1", "You kys1.2")
     root.menu()
