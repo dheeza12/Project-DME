@@ -99,7 +99,8 @@ class TextAndChoice:
             print(f'{n + 1}. {choice.choice_text}')
     
     def save_present(self):
-        x = self.encode()
+        x = self.to_start()
+        x = x.encode()
         file_name = input("file name to save: ")
         f = open(file_name + ".json", "w")
         json.dump(x, f)
