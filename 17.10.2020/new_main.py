@@ -2,10 +2,11 @@ import json
 
 
 class TextAndChoice:
-    def __init__(self, text="Welcome to the start", choice_text=None, back=None):
+    def __init__(self, text="Welcome to the start", choice_text=None, actor=None, back=None):
         self.text = text
         self.choice_text = choice_text
         self.back = back
+        self.actor = actor
         self.path = []
 
     """ 
@@ -18,6 +19,7 @@ class TextAndChoice:
         path = []
         dict_['text'] = self.text
         dict_['choice_text'] = self.choice_text
+        dict_['actor'] = self.actor
         if len(self) > 0:
             path.extend([x.encode() for x in self.path])
         dict_['path'] = path
