@@ -2,33 +2,34 @@ import json
 
 
 class TextAndChoice:
-    def __init__(self, text="Welcome to the start", choice_text=None, actor=None, back=None):
+    def __init__(self, text="Welcome to the start", choice_text=None, back=None):
         self.text = text
         self.choice_text = choice_text
         self.back = back
-        self.actor = actor
         self.path = []
 
     """ 
-    
+
         Encode to dict for JSON dump
-    
+
     """
+
     def encode(self):
         dict_ = {}
         path = []
         dict_['text'] = self.text
         dict_['choice_text'] = self.choice_text
-        dict_['actor'] = self.actor
         if len(self) > 0:
             path.extend([x.encode() for x in self.path])
         dict_['path'] = path
         return dict_
+
     """
-    
+
         Decode from dict to construct the TextAndChoice
-    
+
     """
+
     @staticmethod
     def decode(dict_):
         text = dict_['text']
@@ -82,10 +83,10 @@ class TextAndChoice:
                     self.path.remove(x)
 
     def to_start(self):
-        to_start = self
-        while to_start.back:
-            to_start = self.back
-        return to_start
+        start = self
+        while start.back:
+            start = start.back
+        return start
 
     def next_path(self):
         if self.is_end():
@@ -99,7 +100,7 @@ class TextAndChoice:
     def show_choice(self):
         for n, choice in enumerate(self.path):
             print(f'{n + 1}. {choice.choice_text}')
-    
+
     def save_present(self):
         x = self.to_start()
         x = x.encode()
@@ -117,9 +118,11 @@ class TextAndChoice:
         f.close()
         read = TextAndChoice.decode(x)
         return read
+
     """
         Menu-Start
     """
+
     def menu_choice(self, selector):
         if selector == 'a':
             self.set_text()
@@ -180,14 +183,16 @@ class TextAndChoice:
             pass
         else:
             q.menu()
+
     """
-    
+
         Menu-End
-        
+
     """
+
     def play(self):
         print(self)
-        if not self.is_end():   # self.path represent by self
+        if not self.is_end():  # self.path represent by self
             selector = None
             if len(self) > 1:
                 self.show_choice()
