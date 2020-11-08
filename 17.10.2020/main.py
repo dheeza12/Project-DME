@@ -2,8 +2,10 @@ import json
 
 
 class TextAndChoice:
-    def __init__(self, text="Welcome to the start", choice_text=None, back=None):
+    def __init__(self, text="Welcome to the start", actor=None, img=None, choice_text=None, back=None):
         self.text = text
+        self.actor = actor
+        self.img = img
         self.choice_text = choice_text
         self.back = back
         self.path = []
@@ -18,6 +20,8 @@ class TextAndChoice:
         dict_ = {}
         path = []
         dict_['text'] = self.text
+        dict_['actor'] = self.actor
+        dict_['img'] = self.img
         dict_['choice_text'] = self.choice_text
         if len(self) > 0:
             path.extend([x.encode() for x in self.path])
@@ -33,12 +37,14 @@ class TextAndChoice:
     @staticmethod
     def decode(dict_):
         text = dict_['text']
+        actor = dict_['actor']
+        img = dict_['img']
         choice_text = dict_['choice_text']
-        root = TextAndChoice(text=text, choice_text=choice_text)
+        root_create = TextAndChoice(text=text,actor=actor, img=img, choice_text=choice_text)
         if len(dict_['path']) > 0:
             for x in dict_['path']:
-                root.add_path(root.decode(x))
-        return root
+                root_create.add_path(root.decode(x))
+        return root_create
 
     def selector(self):
         selector = input(": ")
