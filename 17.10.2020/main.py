@@ -43,7 +43,7 @@ class TextAndChoice:
         root_create = TextAndChoice(text=text,actor=actor, img=img, choice_text=choice_text)
         if len(dict_['path']) > 0:
             for x in dict_['path']:
-                root_create.add_path(root.decode(x))
+                root_create.add_path(root_create.decode(x))
         return root_create
 
     def selector(self):
