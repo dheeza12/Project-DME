@@ -67,6 +67,9 @@ class App(QtWidgets.QMainWindow):
         profile_photo = QAction(QIcon("profile.jpg"), "profile", self)
         quit_photo = QAction(QIcon("quit.png"), "quit", self)
 
+        loaded = load_photo.triggered.connect(self.load)
+        quit_photo.triggered.connect(self.quit)
+
         browse = self.toolbar.addAction(browse_photo)
         load = self.toolbar.addAction(load_photo)
         create = self.toolbar.addAction(create_photo)
@@ -82,7 +85,11 @@ class App(QtWidgets.QMainWindow):
         print("Enter story")
 
     def load(self):
-        pass
+        openfile = QFileDialog.getOpenFileName()
+        path = openfile[0]
+        return path
+
+
 
     def write(self):
         pass
@@ -90,8 +97,17 @@ class App(QtWidgets.QMainWindow):
     def profile(self):
         pass
 
-    def quit(self):
-        pass
+    def quit(self, event):
+        reply = QMessageBox.question(
+            self, "Message",
+            "Are you sure to quit?",
+            QMessageBox.Close | QMessageBox.Cancel,
+            QMessageBox.Cancel)
+
+        if reply == QMessageBox.Close:
+            quit()
+        else:
+            pass
 
 def main():
     app = QApplication(sys.argv)
