@@ -2,8 +2,9 @@ import json
 
 
 class TextAndChoice:
-    def __init__(self, text="Welcome to the start", actor=None, img=None, choice_text=None, back=None):
+    def __init__(self, text="Welcome to the start", main=False, actor=None, img=None, choice_text=None, back=None):
         self.text = text
+        self.main = main
         self.actor = actor
         self.img = img
         self.choice_text = choice_text
@@ -11,9 +12,7 @@ class TextAndChoice:
         self.path = []
 
     """ 
-
         Encode to dict for JSON dump
-
     """
 
     def encode(self):
@@ -29,9 +28,7 @@ class TextAndChoice:
         return dict_
 
     """
-
         Decode from dict to construct the TextAndChoice
-
     """
 
     @staticmethod
@@ -198,7 +195,7 @@ class TextAndChoice:
 
     def play(self):
         print(self)
-        if not self.is_end():  # self.path represent by self
+        if not self.is_end():
             selector = None
             if len(self) > 1:
                 self.show_choice()

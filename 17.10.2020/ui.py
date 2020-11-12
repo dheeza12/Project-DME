@@ -6,20 +6,21 @@ from main import TextAndChoice
 
 
 class PlayUi(QScrollArea):
-    def __init__(self, json_file):
+    def __init__(self, root):
         super().__init__()
-        self.json_file = json_file
-        mainLayout = QVBoxLayout()
-        mainLayout.setAlignment(Qt.AlignTop)
+        self.root = root
+        self.mainLayout = QVBoxLayout()
+        self.mainLayout.setAlignment(Qt.AlignTop)
         self.setWidgetResizable(True)
-        self.setLayout(mainLayout)
+        self.setLayout(self.mainLayout)
         self.setCenter()
         self.setWindowTitle("Play demo")
         self.show()
-
+        self.play(self.root)
         # set up for the image and line label
         """img = QLabel()
-        line = QLabel("Best waifu in the world")
+        actor_label = QLabel("Papika")
+        line_label = QLabel("Best waifu in the world")
         pixMap = QPixmap('2020105104225.png')
         smaller_pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
         img.setPixmap(smaller_pixMap)
@@ -28,12 +29,48 @@ class PlayUi(QScrollArea):
         hbox.addWidget(img)
         hbox.addWidget(line)
         hbox.setAlignment(Qt.AlignLeft)
-        mainLayout.addLayout(hbox)"""
+        self.mainLayout.addLayout(hbox)"""
 
+    def play(self, root):
+        root = self.root
 
-    @staticmethod
-    def loadStory(json_loaded):
-        pass
+        hbox = QHBoxLayout()
+        vbox = QVBoxLayout()
+
+        if root.actor:
+            actor_label = QLabel(root.actor+':')
+            vbox.addWidget(actor_label)
+        line_label = QLabel(str(root))
+        vbox.addWidget(line_label)
+
+        if root.img:
+            pix_label = QLabel()
+            pixMap = QPixmap(root.img)
+            pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
+            pix_label.setPixmap(pixMap)
+        else:
+            pix_label = QLabel()
+            pixMap = QPixmap('default_avatar.png')
+            pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
+            pix_label.setPixmap(pixMap)
+        if root.actor == 'main':
+            hbox.setAlignment(Qt.AlignRight)
+            hbox.addLayout(vbox)
+            hbox.addWidget(pix_label)
+        else:
+            hbox.setAlignment(Qt.AlignLeft)
+            hbox.addWidget(pix_label)
+            hbox.addLayout(vbox)
+
+        if not root.is_end():
+            if len(root) > 1:
+                vbox = QVBoxLayout()
+                for i, choice in enumerate(root.path):
+                    button = QPushButton(choice.choice_text)
+                    root = button.clicked.connect(lambda i, root: root.path[i])
+                    vbox.addWidget(button)
+
+        self.mainLayout.addLayout(hbox)
 
     def setCenter(self):
         qtRectangle = self.frameGeometry()
