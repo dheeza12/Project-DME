@@ -19,6 +19,7 @@ class TextAndChoice:
         dict_ = {}
         path = []
         dict_['text'] = self.text
+        dict_['main'] = self.main
         dict_['actor'] = self.actor
         dict_['img'] = self.img
         dict_['choice_text'] = self.choice_text
