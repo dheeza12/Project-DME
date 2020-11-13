@@ -9,10 +9,10 @@ class PlayUi(QScrollArea):
     def __init__(self, root):
         super().__init__()
         self.root = root
-        self.mainLayout = QVBoxLayout()
-        self.mainLayout.setAlignment(Qt.AlignTop)
+        self.setFixedHeight(600)
+        self.setFixedWidth(350)
+        self.setAlignment(Qt.AlignTop)
         self.setWidgetResizable(True)
-        self.setLayout(self.mainLayout)
         self.setCenter()
         self.setWindowTitle("Play demo")
         self.show()
@@ -32,9 +32,8 @@ class PlayUi(QScrollArea):
         self.mainLayout.addLayout(hbox)"""
 
     def play(self, root):
-        root = self.root
 
-        hbox = QHBoxLayout()
+        hbox = QHBoxLayout(self)
         vbox = QVBoxLayout()
 
         if root.actor:
@@ -61,16 +60,18 @@ class PlayUi(QScrollArea):
             hbox.setAlignment(Qt.AlignLeft)
             hbox.addWidget(pix_label)
             hbox.addLayout(vbox)
-
         if not root.is_end():
             if len(root) > 1:
+                hbox = QHBoxLayout()
+                hbox.setAlignment(Qt.AlignRight)
                 vbox = QVBoxLayout()
-                for i, choice in enumerate(root.path):
-                    button = QPushButton(choice.choice_text)
-                    root = button.clicked.connect(lambda i, root: root.path[i])
-                    vbox.addWidget(button)
 
-        self.mainLayout.addLayout(hbox)
+                buttons = []
+                for i, choice in enumerate(root.path):
+                    buttons.append(QPushButton(choice.choice_text))
+                    buttons[i].clicked.connect(lambda: self.play(root.path[i]))
+                    vbox.addWidget(buttons[i])
+                hbox.addLayout(vbox)
 
     def setCenter(self):
         qtRectangle = self.frameGeometry()
