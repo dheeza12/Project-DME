@@ -27,7 +27,7 @@ class PlayUi(QScrollArea):
 
         hbox = QHBoxLayout()
         vbox = QVBoxLayout()
-        if root.actor:
+        if root.actor:              # ADD NAME IF EXISTED
             actor_label = QLabel(root.actor+':')
             vbox.addWidget(actor_label)
         line_label = QLabel(str(root))
@@ -44,7 +44,8 @@ class PlayUi(QScrollArea):
             pixMap = QPixmap('default_avatar.png')
             pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
             pix_label.setPixmap(pixMap)
-        if root.actor == 'main':
+
+        if root.main:               # CHECK IF IS THE PLAYER
             hbox.setAlignment(Qt.AlignRight)
             hbox.addLayout(vbox)
             hbox.addWidget(pix_label)
@@ -70,8 +71,13 @@ class PlayUi(QScrollArea):
                     vbox.addWidget(butt)
 
                 hbox.addLayout(vbox)
+                self.box.addLayout(hbox)
+            elif len(root) != 0:
+                self.play(root.path[0])
+        else:
+            pass            # END
 
-            self.box.addLayout(hbox)
+        """ STILL NEED TO ADD ACTION AFTER GAME ENDs"""
 
     def setCenter(self):
         qtRectangle = self.frameGeometry()
