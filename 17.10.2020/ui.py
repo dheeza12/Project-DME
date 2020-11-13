@@ -9,37 +9,29 @@ class PlayUi(QScrollArea):
     def __init__(self, root):
         super().__init__()
         self.root = root
-        self.setFixedHeight(600)
-        self.setFixedWidth(350)
-        self.setAlignment(Qt.AlignTop)
+        self.mainWidget = QWidget()
+        self.box = QVBoxLayout()
+        self.box.setAlignment(Qt.AlignTop)
+        self.mainWidget.setLayout(self.box)
+
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.setFixedSize(400, 600)
         self.setWidgetResizable(True)
         self.setCenter()
         self.setWindowTitle("Play demo")
+        self.setWidget(self.mainWidget)
         self.show()
         self.play(self.root)
-        # set up for the image and line label
-        """img = QLabel()
-        actor_label = QLabel("Papika")
-        line_label = QLabel("Best waifu in the world")
-        pixMap = QPixmap('2020105104225.png')
-        smaller_pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
-        img.setPixmap(smaller_pixMap)
-        line.setMinimumHeight(smaller_pixMap.height())
-        hbox = QHBoxLayout()
-        hbox.addWidget(img)
-        hbox.addWidget(line)
-        hbox.setAlignment(Qt.AlignLeft)
-        self.mainLayout.addLayout(hbox)"""
 
     def play(self, root):
 
-        hbox = QHBoxLayout(self)
+        hbox = QHBoxLayout()
         vbox = QVBoxLayout()
-
         if root.actor:
             actor_label = QLabel(root.actor+':')
             vbox.addWidget(actor_label)
         line_label = QLabel(str(root))
+        line_label.setWordWrap(True)
         vbox.addWidget(line_label)
 
         if root.img:
@@ -60,18 +52,26 @@ class PlayUi(QScrollArea):
             hbox.setAlignment(Qt.AlignLeft)
             hbox.addWidget(pix_label)
             hbox.addLayout(vbox)
+        self.box.addLayout(hbox)
+
         if not root.is_end():
             if len(root) > 1:
                 hbox = QHBoxLayout()
                 hbox.setAlignment(Qt.AlignRight)
                 vbox = QVBoxLayout()
-
-                buttons = []
                 for i, choice in enumerate(root.path):
-                    buttons.append(QPushButton(choice.choice_text))
-                    buttons[i].clicked.connect(lambda: self.play(root.path[i]))
-                    vbox.addWidget(buttons[i])
+                    butt = QPushButton("Enter")
+                    btnLabel = QLabel(choice.choice_text)
+                    btnLabel.setAlignment(Qt.AlignCenter)
+                    btnLabel.setWordWrap(True)
+                    btnLabel.setMinimumHeight(25)
+                    butt.clicked.connect(lambda ignore, arg=i: self.play(root.path[arg]))
+                    vbox.addWidget(btnLabel)
+                    vbox.addWidget(butt)
+
                 hbox.addLayout(vbox)
+
+            self.box.addLayout(hbox)
 
     def setCenter(self):
         qtRectangle = self.frameGeometry()
