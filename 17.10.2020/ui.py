@@ -33,16 +33,13 @@ class PlayUi(QScrollArea):
         line_label.setWordWrap(True)
         vbox.addWidget(line_label)
 
+        pix_label = QLabel()
         if root.img:
-            pix_label = QLabel()
             pixMap = QPixmap(root.img)
-            pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
-            pix_label.setPixmap(pixMap)
         else:
-            pix_label = QLabel()
             pixMap = QPixmap('default_avatar.png')
-            pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
-            pix_label.setPixmap(pixMap)
+        pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
+        pix_label.setPixmap(pixMap)
 
         if root.main:               # CHECK IF IS THE PLAYER
             hbox.setAlignment(Qt.AlignRight)
@@ -52,6 +49,7 @@ class PlayUi(QScrollArea):
             hbox.setAlignment(Qt.AlignLeft)
             hbox.addWidget(pix_label)
             hbox.addLayout(vbox)
+
         self.box.addLayout(hbox)
 
         if not root.is_end():
