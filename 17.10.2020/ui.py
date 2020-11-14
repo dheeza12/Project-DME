@@ -24,7 +24,6 @@ class PlayUi(QScrollArea):
         self.play(self.root)
 
     def play(self, root):
-
         hbox = QHBoxLayout()
         vbox = QVBoxLayout()
         if root.actor:              # ADD NAME IF EXISTED
@@ -60,18 +59,21 @@ class PlayUi(QScrollArea):
                 hbox = QHBoxLayout()
                 hbox.setAlignment(Qt.AlignRight)
                 vbox = QVBoxLayout()
+
                 for i, choice in enumerate(root.path):
                     butt = QPushButton("Enter")
                     btnLabel = QLabel(choice.choice_text)
                     btnLabel.setAlignment(Qt.AlignCenter)
                     btnLabel.setWordWrap(True)
                     btnLabel.setMinimumHeight(25)
-                    butt.clicked.connect(lambda ignore, arg=i: self.play(root.path[arg]))
+                    butt.clicked.connect(lambda ignore, current_root=root, arg=i: self.choose(current_root, arg))
+
                     vbox.addWidget(btnLabel)
                     vbox.addWidget(butt)
 
                 hbox.addLayout(vbox)
                 self.box.addLayout(hbox)
+
             elif len(root) != 0:
                 self.play(root.path[0])
         else:
@@ -79,11 +81,26 @@ class PlayUi(QScrollArea):
 
         """ STILL NEED TO ADD ACTION AFTER GAME ENDs"""
 
+    def choose(self, root, arg):
+        clearLayout(self.box.takeAt(self.box.count() - 1))
+
+
+        self.play(root.path[arg])
+
     def setCenter(self):
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
+
+
+def clearLayout(layout):
+    while layout.count():
+        child = layout.takeAt(0)
+        if child.widget() is not None:
+            child.widget().deleteLater()
+        elif child.layout() is not None:
+            clearLayout(child.layout())
 
 
 if __name__ == '__main__':
