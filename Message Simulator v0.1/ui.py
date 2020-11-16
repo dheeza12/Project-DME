@@ -20,6 +20,7 @@ class PlayUi(QScrollArea):
         self.setCenter()
         self.setWindowTitle("Play demo")
         self.setWidget(self.mainWidget)
+
         self.show()
         self.play(self.root)
 
@@ -41,7 +42,7 @@ class PlayUi(QScrollArea):
         pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
         pix_label.setPixmap(pixMap)
 
-        if root.main:               # CHECK IF IS THE PLAYER
+        if root.main:
             hbox.setAlignment(Qt.AlignRight)
             hbox.addLayout(vbox)
             hbox.addWidget(pix_label)
@@ -92,8 +93,8 @@ class PlayUi(QScrollArea):
         self.move(qtRectangle.topLeft())
 
 
-def clearLayout(layout):
-    while layout.count():
+def clearLayout(layout):    # http://josbalcaen.com/maya-python-pyqt-delete-all-widgets-in-a-layout/
+    while layout.count():   # special thank!
         child = layout.takeAt(0)
         if child.widget() is not None:
             child.widget().deleteLater()
