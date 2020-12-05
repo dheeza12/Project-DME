@@ -8,6 +8,7 @@ class TextAndChoice:
         self.actor = actor
         self.img = img
         self.choice_text = choice_text
+
         self.back = back
         self.path = []
 
