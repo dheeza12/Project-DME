@@ -28,11 +28,9 @@ class TextAndChoice:
             path.extend([x.encode() for x in self.path])
         dict_['path'] = path
         return dict_
-
     """
         Decode from dict to construct the TextAndChoice
     """
-
     @staticmethod
     def decode(dict_):
         text = dict_['text']
@@ -72,9 +70,8 @@ class TextAndChoice:
         return False
 
     def add_path(self, node):
-        path = node
-        path.back = self
-        self.path.append(path)
+        node.back = self
+        self.path.append(node)
 
     def remove(self):
         if self.is_end():
