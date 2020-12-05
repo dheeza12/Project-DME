@@ -1,26 +1,72 @@
+import sys
 import json
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTreeView
+from PyQt5.Qt import QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QFont, QColor
 
 
-class TextAndChoice:
-    def __init__(self, text="Welcome to the start", main=False, actor=None, img=None, choice_text=None, back=None):
+class STDItem(QStandardItem):
+    def __init__(
+                 self, txt='',
+                 font_size=12, set_bold=False,
+                 color=QColor(0, 0, 0)):
+        super().__init__()
+
+        fnt = QFont('Open Sans', font_size)
+        fnt.setBold(set_bold)
+
+        self.setEditable(False)
+        self.setForeground(color)
+        self.setFont(fnt)
+        self.setText(txt)
+
+
+class TextAndChoice(QMainWindow):
+    def __init__(
+                 self, text="Welcome to the start",
+                 actor=None,
+                 img=None,
+                 choice_text=None,
+                 back=None):
+        super().__init__()
         self.text = text
-        self.main = main
         self.actor = actor
         self.img = img
         self.choice_text = choice_text
-
         self.back = back
         self.path = []
 
-    """ 
-        Encode to dict for JSON dump
-    """
+        self.win_init()
+        self.tree_init()
+
+    def win_init(self):
+        self.setWindowTitle('Story Tree')
+        self.resize(800, 600)
+
+    def tree_init(self):
+        self.t_view = QTreeView()
+        self.t_view.setHeaderHidden(True)
+        model = QStandardItemModel()
+
+        self.root_node = model.invisibleRootItem()
+
+        kor = STDItem('korean', 16, set_bold=True)
+        pil = STDItem('korean', 16, set_bold=True)
+        gil = STDItem('korean', 16, set_bold=True)
+
+        self.root_node.appendRow(kor)
+        self.root_node.appendRow(pil)
+        self.root_node.appendRow(gil)
+
+        self.t_view.setModel(model)
+        self.t_view.expandAll()
+
+        self.setCentralWidget(self.t_view)
 
     def encode(self):
         dict_ = {}
         path = []
         dict_['text'] = self.text
-        dict_['main'] = self.main
         dict_['actor'] = self.actor
         dict_['img'] = self.img
         dict_['choice_text'] = self.choice_text
@@ -29,20 +75,19 @@ class TextAndChoice:
         dict_['path'] = path
         return dict_
 
-    """
-        Decode from dict to construct the TextAndChoice
-    """
-
     @staticmethod
     def decode(dict_):
         text = dict_['text']
         actor = dict_['actor']
         img = dict_['img']
         choice_text = dict_['choice_text']
-        root_create = TextAndChoice(text=text,actor=actor, img=img, choice_text=choice_text)
+        root_create = TextAndChoice(
+            text=text, actor=actor, img=img, choice_text=choice_text
+        )
         if len(dict_['path']) > 0:
             for x in dict_['path']:
-                root_create.add_path(root_create.decode(x))
+                root_create.add_path(root.decode(x))
+                root_create.add_path_tv(root.decode(x))
         return root_create
 
     def selector(self):
@@ -72,10 +117,14 @@ class TextAndChoice:
         return False
 
     def add_path(self, node):
-        node = TextAndChoice()
         path = node
         path.back = self
         self.path.append(path)
+
+    def add_path_tv(self, node):
+        path = STDItem(str(node), 12)
+        path.back = self
+        self.root_node.appendRow(path)
 
     def remove(self):
         if self.is_end():
@@ -117,8 +166,8 @@ class TextAndChoice:
         self.menu()
 
     @staticmethod
-    def load_present():
-        file_name = input("file name to load: ")
+    def load_present(file_name):
+        #file_name = input("file name to load: ")
         f = open(file_name + ".json", "r")
         x = json.load(f)
         f.close()
@@ -198,7 +247,7 @@ class TextAndChoice:
 
     def play(self):
         print(self)
-        if not self.is_end():
+        if not self.is_end():  # self.path represent by self
             selector = None
             if len(self) > 1:
                 self.show_choice()
@@ -215,5 +264,9 @@ class TextAndChoice:
 
 
 if __name__ == '__main__':
+    app = QApplication(sys.argv)
     root = TextAndChoice()
-    root.menu()
+    root.load_present('IamDME')
+    root.show()
+
+    sys.exit(app.exec_())
