@@ -72,7 +72,6 @@ class TextAndChoice:
         return False
 
     def add_path(self, node):
-        node = TextAndChoice()
         path = node
         path.back = self
         self.path.append(path)
