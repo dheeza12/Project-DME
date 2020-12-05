@@ -10,17 +10,29 @@ class PlayUi(QScrollArea):
         super().__init__()
         self.root = root
         self.mainWidget = QWidget()
+
         self.box = QVBoxLayout()
         self.box.setAlignment(Qt.AlignTop)
         self.mainWidget.setLayout(self.box)
+        self.mainWidget.setFont(QFont('Arial', 12))
 
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.setFixedSize(400, 600)
+        self.setFixedSize(600, 800)
         self.setWidgetResizable(True)
         self.setCenter()
         self.setWindowTitle("Play demo")
         self.setWidget(self.mainWidget)
 
+        self.setStyleSheet("""  QLabel#Choice { background-color: Turquoise; padding: 10px;
+                                    border-radius: 20px;
+                                    font-size: 16px; font-family: Arial;} 
+                                
+                                QLabel#Label  { background-color: Mintcream; color: black;
+                                    border-style: ridge; border-width: 5px; border-color: snow; border-radius: 10px;
+                                    padding: 6px; font-size: 16px; font-family: Arial}
+                                
+                                QPushButton#Choice { font-size: 16px; font-family: Arial; font: bold;
+                                    }""")
         self.show()
         self.play(self.root)
 
@@ -31,7 +43,9 @@ class PlayUi(QScrollArea):
             actor_label = QLabel(root.actor+':')
             vbox.addWidget(actor_label)
         line_label = QLabel(str(root))
+        line_label.setObjectName('Label')
         line_label.setWordWrap(True)
+
         vbox.addWidget(line_label)
 
         pix_label = QLabel()
@@ -41,6 +55,7 @@ class PlayUi(QScrollArea):
             pixMap = QPixmap('default_avatar.png')
         pixMap = pixMap.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
         pix_label.setPixmap(pixMap)
+        pix_label.setObjectName('Pixmap')
 
         if root.main:
             hbox.setAlignment(Qt.AlignRight)
@@ -56,21 +71,29 @@ class PlayUi(QScrollArea):
         if not root.is_end():
             if len(root) > 1:
                 hbox = QHBoxLayout()
-                hbox.setAlignment(Qt.AlignRight)
                 vbox = QVBoxLayout()
 
                 for i, choice in enumerate(root.path):
-                    butt = QPushButton("Enter")
+                    widget = QWidget()
+                    vbox_sub = QVBoxLayout()
+                    widget.setLayout(vbox_sub)
+
                     btnLabel = QLabel(choice.choice_text)
+                    btnLabel.setObjectName('Choice')
                     btnLabel.setAlignment(Qt.AlignCenter)
                     btnLabel.setWordWrap(True)
-                    btnLabel.setMinimumHeight(25)
+
+                    butt = QPushButton("Choose")
+                    butt.setObjectName('Choice')
                     butt.clicked.connect(lambda ignore, current_root=root, arg=i: self.choose(current_root, arg))
 
                     vbox.addWidget(btnLabel)
-                    vbox.addWidget(butt)
+                    vbox.addWidget(widget)
+                    vbox_sub.addWidget(butt)
 
                 hbox.addLayout(vbox)
+
+
                 self.box.addLayout(hbox)
 
             elif len(root) != 0:
@@ -82,8 +105,6 @@ class PlayUi(QScrollArea):
 
     def choose(self, root, arg):
         clearLayout(self.box.takeAt(self.box.count() - 1))
-
-
         self.play(root.path[arg])
 
     def setCenter(self):
