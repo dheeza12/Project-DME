@@ -22,9 +22,7 @@ class PlayUi(QScrollArea):
         self.setCenter()
         self.setWindowTitle("Play demo")
         self.setWidget(self.mainWidget)
-
         self.setStyleSheet("""  QLabel#Choice { background-color: Turquoise; padding: 10px;
-                                    border-radius: 20px;
                                     font-size: 16px; font-family: Arial;} 
                                 
                                 QLabel#Label  { background-color: Mintcream; color: black;
@@ -90,7 +88,6 @@ class PlayUi(QScrollArea):
                     vbox.addWidget(btnLabel)
                     vbox.addWidget(widget)
                     vbox_sub.addWidget(butt)
-
                 hbox.addLayout(vbox)
 
 
