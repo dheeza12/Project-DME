@@ -30,7 +30,7 @@ class PlayUi(QMainWindow):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setWidget(self.mainWidget)
         self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-
+        self.statusBar().setObjectName('Status')
         self.setCentralWidget(self.scroll_area)
         self.setFixedSize(600, 800)
         self.setCenter()
@@ -45,7 +45,7 @@ class PlayUi(QMainWindow):
         if not root.is_end():
             if len(root) > 1:
                 self.prompt = True
-                QTimer.singleShot(1000, lambda: self.display_choice())
+                self.bubble_then_func(self.display_choice)
             elif len(root) != 0:
                 self.root = self.root.path[0]
         else:
@@ -98,6 +98,7 @@ class PlayUi(QMainWindow):
         self.box.addLayout(hbox)
 
     def display_choice(self):
+        clearLayout(self.box.takeAt(self.box.count() - 1))
         self.prompt = True
         self.statusBar().showMessage('Choose one of the messages')
         hbox = QHBoxLayout()
@@ -125,6 +126,15 @@ class PlayUi(QMainWindow):
         hbox.addLayout(vbox)
         self.box.addLayout(hbox)
 
+    def bubble_then_func(self, func):
+        hbox = QHBoxLayout()
+        bubble = QLabel('. . . . . . .')
+        bubble.setObjectName('Chat')
+        hbox.addWidget(bubble)
+        hbox.setAlignment(Qt.AlignCenter)
+        self.box.addLayout(hbox)
+        QTimer.singleShot(600, lambda: func())
+
     def choose(self, arg):
         clearLayout(self.box.takeAt(self.box.count() - 1))
         self.display_text(self.root.path[arg], False)
@@ -147,7 +157,7 @@ class PlayUi(QMainWindow):
         self.setStyleSheet("""  
                 QWidget#Background {background-color: Lightcyan;}
 
-                QWidget { font-family: Comic Sans MS;}
+                QWidget#Status { font-family: Comic Sans MS; font-size: 22px;}
 
                 QLabel#Actor { font: bold; }
 
@@ -176,7 +186,7 @@ class PlayUi(QMainWindow):
         self.setStyleSheet("""  
                 QWidget#Background {background-color: Gainsboro}
                 
-                QWidget { font-family: Comic Sans MS;}
+                QWidget#Status { font-family: Comic Sans MS; font-size: 22px;}
 
                 QLabel#Actor { font: bold; }
 
