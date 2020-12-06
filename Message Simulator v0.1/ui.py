@@ -33,7 +33,7 @@ class PlayUi(QScrollArea):
         
         QLabel#Actor { font: bold; }
         
-        QLabel#Label  { background-color: snow; color: black; font-size: 16px;
+        QLabel#Chat  { background-color: snow; color: black; font-size: 16px;
             border-style: ridge; border-width: 5px; border-color: Mintcream; border-radius: 10px;
             padding: 6px; padding-right: 12px; padding-left: 12px;
             }
@@ -57,47 +57,7 @@ class PlayUi(QScrollArea):
         self.play(self.root)
 
     def play(self, root):
-        hbox = QHBoxLayout()
-        vbox = QVBoxLayout()
-        if root.actor:              # ADD NAME IF EXISTED
-            actor_label = QLabel(root.actor+':')
-            actor_label.setObjectName('Actor')
-            vbox.addWidget(actor_label)
-            if root.main:
-                actor_label.setAlignment(Qt.AlignRight)
-        line_label = QLabel(str(root))
-        line_label.setObjectName('Label')
-        line_label.setWordWrap(True)
-        vbox.addWidget(line_label)
-
-        if root.img:
-            pix_map = QPixmap(root.img)
-        else:
-            pix_map = QPixmap('Content/default_avatar.png')
-        pix_map = pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
-        pix_label = QLabel()
-        pix_label.setPixmap(pix_map)
-        pix_label.setObjectName('Pixmap')
-
-        if root.main_img:
-            main_pix_map = QPixmap(root.main_img)
-        else:
-            main_pix_map = QPixmap('Content/default_avatar.png')
-        main_pix_map = main_pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
-        main_pix_label = QLabel()
-        main_pix_label.setPixmap(main_pix_map)
-        main_pix_label.setObjectName('Pixmap')
-
-        if root.main:
-            hbox.setAlignment(Qt.AlignRight)
-            hbox.addLayout(vbox)
-            hbox.addWidget(main_pix_label)
-        else:
-            hbox.setAlignment(Qt.AlignLeft)
-            hbox.addWidget(pix_label)
-            hbox.addLayout(vbox)
-        self.box.addLayout(hbox)
-
+        self.display_text(root)
         if not root.is_end():
             if len(root) > 1:
                 hbox = QHBoxLayout()
@@ -128,12 +88,57 @@ class PlayUi(QScrollArea):
             elif len(root) != 0:
                 self.play(root.path[0])
         else:
-            pass            # END
+            pass
 
         """ STILL NEED TO ADD ACTION AFTER GAME ENDs"""
 
+    def display_text(self, root, text=True):
+        hbox = QHBoxLayout()
+        vbox = QVBoxLayout()
+        if root.actor:  # ADD NAME IF EXISTED
+            actor_label = QLabel(root.actor + ':')
+            actor_label.setObjectName('Actor')
+            vbox.addWidget(actor_label)
+            if root.main:
+                actor_label.setAlignment(Qt.AlignRight)
+        line_label = QLabel(root.choice_text)
+        if text:
+            line_label = QLabel(str(root))
+        line_label.setObjectName('Chat')
+        line_label.setWordWrap(True)
+        vbox.addWidget(line_label)
+
+        if root.img:
+            pix_map = QPixmap(root.img)
+        else:
+            pix_map = QPixmap('Content/default_avatar.png')
+        pix_map = pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
+        pix_label = QLabel()
+        pix_label.setPixmap(pix_map)
+        pix_label.setObjectName('Pixmap')
+
+        if root.main_img:
+            main_pix_map = QPixmap(root.main_img)
+        else:
+            main_pix_map = QPixmap('Content/default_avatar.png')
+        main_pix_map = main_pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
+        main_pix_label = QLabel()
+        main_pix_label.setPixmap(main_pix_map)
+        main_pix_label.setObjectName('Pixmap')
+
+        if root.main or text is False:
+            hbox.setAlignment(Qt.AlignRight)
+            hbox.addLayout(vbox)
+            hbox.addWidget(main_pix_label)
+        else:
+            hbox.setAlignment(Qt.AlignLeft)
+            hbox.addWidget(pix_label)
+            hbox.addLayout(vbox)
+        self.box.addLayout(hbox)
+
     def choose(self, root, arg):
         clearLayout(self.box.takeAt(self.box.count() - 1))
+        self.display_text(root.path[arg], False)
         self.play(root.path[arg])
 
     def setCenter(self):
