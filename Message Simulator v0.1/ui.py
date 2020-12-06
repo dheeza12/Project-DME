@@ -46,60 +46,17 @@ class PlayUi(QMainWindow):
             if len(root) > 1:
                 self.prompt = True
                 self.bubble_then_func(self.display_choice)
-            elif len(root) == 1:
+            elif len(root) != 0:
                 self.root = self.root.path[0]
-                self.display_choice_text(self.root)
         else:
             self.statusBar().showMessage('End of the story, press ESC to exit.')
             self.prompt = True
             self.end = True
 
-    def display_choice_text(self, root):
-        hbox = QHBoxLayout()
-        vbox = QVBoxLayout()
-        if root.actor:  # ADD NAME IF EXISTED
-            actor_label = QLabel(root.actor + ':')
-            actor_label.setObjectName('Actor')
-            vbox.addWidget(actor_label)
-            if root.main:
-                actor_label.setAlignment(Qt.AlignRight)
-        if root.choice_text:
-            line_label = QLabel(root.choice_text)
-            line_label.setObjectName('Chat')
-            line_label.setWordWrap(True)
-            vbox.addWidget(line_label)
-            if root.img:
-                pix_map = QPixmap(root.img)
-            else:
-                pix_map = QPixmap('Content/default_avatar.png')
-            pix_map = pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
-            pix_label = QLabel()
-            pix_label.setPixmap(pix_map)
-            pix_label.setObjectName('Pixmap')
-
-            if root.main_img:
-                main_pix_map = QPixmap(root.main_img)
-            else:
-                main_pix_map = QPixmap('Content/default_avatar.png')
-            main_pix_map = main_pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
-            main_pix_label = QLabel()
-            main_pix_label.setPixmap(main_pix_map)
-            main_pix_label.setObjectName('Pixmap')
-
-            if root.main:
-                hbox.setAlignment(Qt.AlignRight)
-                hbox.addLayout(vbox)
-                hbox.addWidget(main_pix_label)
-            else:
-                hbox.setAlignment(Qt.AlignLeft)
-                hbox.addWidget(pix_label)
-                hbox.addLayout(vbox)
-            self.box.addLayout(hbox)
-
     def display_text(self, root, text=True):
         hbox = QHBoxLayout()
         vbox = QVBoxLayout()
-        if root.actor:  # ADD NAME IF EXISTED
+        if root.actor and text:  # ADD NAME IF EXISTED
             actor_label = QLabel(root.actor + ':')
             actor_label.setObjectName('Actor')
             vbox.addWidget(actor_label)
@@ -108,7 +65,7 @@ class PlayUi(QMainWindow):
         line_label = QLabel(root.choice_text)
         if root.text:
             if text:
-                line_label = QLabel(str(root))
+                line_label = QLabel(root.text)
             line_label.setObjectName('Chat')
             line_label.setWordWrap(True)
             vbox.addWidget(line_label)
@@ -281,5 +238,5 @@ def clearLayout(layout):  # http://josbalcaen.com/maya-python-pyqt-delete-all-wi
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    play = PlayUi('IamDME.json')
+    play = PlayUi('Test3.json')
     sys.exit(app.exec_())
