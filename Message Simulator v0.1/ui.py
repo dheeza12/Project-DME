@@ -20,6 +20,7 @@ class PlayUi(QScrollArea):
         self.box.setAlignment(Qt.AlignTop)
         self.mainWidget.setLayout(self.box)
         self.mainWidget.setObjectName("Background")
+        self.statusBar
 
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.setFixedSize(600, 800)
