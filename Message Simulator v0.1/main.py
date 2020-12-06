@@ -37,7 +37,10 @@ class TextAndChoice:
         actor = dict_['actor']
         img = dict_['img']
         choice_text = dict_['choice_text']
-        main = dict_['main']
+        if 'main' in dict_:
+            main = dict_['main']
+        else:
+            main = None
         root_create = TextAndChoice(text=text,actor=actor, main=main, img=img, choice_text=choice_text)
         if len(dict_['path']) > 0:
             for x in dict_['path']:
