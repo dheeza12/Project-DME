@@ -174,7 +174,6 @@ class PlayUi(QMainWindow):
                 QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Chartreuse;
                     }
                                     """)
-        return 'LIGHT'
 
     def dark_mode(self):
         self.setStyleSheet("""  
@@ -204,7 +203,6 @@ class PlayUi(QMainWindow):
                 QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Lightcoral;
                     }
                                     """)
-        return 'DARK'
 
     def setCenter(self):
         qtRectangle = self.frameGeometry()
