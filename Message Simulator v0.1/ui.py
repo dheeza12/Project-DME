@@ -3,11 +3,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from main import TextAndChoice
+import json
 
 
 class PlayUi(QScrollArea):
-    def __init__(self, root, name='Play Mode'):
+    def __init__(self, rootdirectory):
         super().__init__()
+        file = open(rootdirectory, 'r')
+        file = json.load(file)
+        root = TextAndChoice.decode(file)
         self.root = root
         self.mainWidget = QWidget()
         self.show()
@@ -20,7 +24,7 @@ class PlayUi(QScrollArea):
         self.setFixedSize(600, 800)
         self.setWidgetResizable(True)
         self.setCenter()
-        self.setWindowTitle(name.split('.')[0])
+        self.setWindowTitle(rootdirectory.split('.')[0])
         self.setWidget(self.mainWidget)
         self.setFont(QFont('Helvetica', 18))
         self.setStyleSheet("""  
@@ -43,6 +47,8 @@ class PlayUi(QScrollArea):
             padding: 10px;
             }
         QPushButton#Choice:hover { background-color: Mintcream; border-color: Chartreuse;}
+        
+        
             }
                             """)
 
@@ -143,10 +149,7 @@ def clearLayout(layout):    # http://josbalcaen.com/maya-python-pyqt-delete-all-
 
 
 if __name__ == '__main__':
-    import json
-    file = open('IamDME.json', 'r')
-    file = json.load(file)
-    decoded = TextAndChoice.decode(file)
+
     app = QApplication(sys.argv)
-    play = PlayUi(decoded, 'IamDME.json')
+    play = PlayUi('IamDME.json')
     sys.exit(app.exec_())
