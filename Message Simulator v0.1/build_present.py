@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (
 
 
 static_nest = {
-    "text": "",
+    "text": "A New Story",
     "main": False,
     "main_img": "",
     "actor": "",
@@ -26,6 +26,7 @@ class newTC(QMainWindow):
         self.nest = nest
         self.cur_nest = self.nest
         self.cur_path_index = 0
+        self.back = []
 
         self.init_ui()
 
@@ -118,13 +119,14 @@ class newTC(QMainWindow):
         )
         self.main_chk_box = QCheckBox('Is Main?')
 
-        browse_img_but = self.new_button('Browse')
-        browse_main_img_but = self.new_button('Browse')
+        self.browse_img_but = self.new_button('Browse')
+        self.browse_main_img_but = self.new_button('Browse')
         self.change_choice_but = self.new_button('Apply Change Choice Text')
-        next_but = self.new_button('Next Path')
-        del_but = self.new_button('Delete Path')
-        to_start_but = self.new_button('To Start')
-        add_path_but = self.new_button('Add new Choice')
+        self.next_but = self.new_button('Next Path')
+        self.del_but = self.new_button('Delete Path')
+        self.to_start_but = self.new_button('To Start')
+        self.add_path_but = self.new_button('Add new Choice')
+        back_but = self.new_button('Back')
 
         self.choice.setEditable(True)
         self.choice_line.setEnabled(False)
@@ -135,9 +137,9 @@ class newTC(QMainWindow):
         f_layout.addRow(self.actor_line)
         hbox = QHBoxLayout()
         hbox.addWidget(self.main_chk_box)
-        hbox.addWidget(browse_main_img_but)
+        hbox.addWidget(self.browse_main_img_but)
         hbox.addWidget(self.main_img_dir_line)
-        hbox.addWidget(browse_img_but)
+        hbox.addWidget(self.browse_img_but)
         hbox.addWidget(self.img_dir_line)
         f_layout.addRow(hbox)
 
@@ -145,10 +147,11 @@ class newTC(QMainWindow):
         f_layout.addRow(self.change_choice_but)
 
         hbox = QHBoxLayout()
-        hbox.addWidget(next_but)
-        hbox.addWidget(del_but)
-        hbox.addWidget(to_start_but)
-        hbox.addWidget(add_path_but)
+        hbox.addWidget(self.next_but)
+        hbox.addWidget(back_but)
+        hbox.addWidget(self.del_but)
+        hbox.addWidget(self.to_start_but)
+        hbox.addWidget(self.add_path_but)
         f_layout.addRow(hbox)
         f_layout.addRow(self.text_line)
 
@@ -157,12 +160,13 @@ class newTC(QMainWindow):
         self.choice.currentIndexChanged.connect(self.change_choice)
         self.change_choice_but.clicked.connect(self.change_choice_text)
 
-        del_but.clicked.connect(self.del_path)
-        next_but.clicked.connect(self.next_path)
-        to_start_but.clicked.connect(self.to_start)
-        add_path_but.clicked.connect(self.add_path)
-        browse_img_but.clicked.connect(self.get_img)
-        browse_main_img_but.clicked.connect(self.get_main_img)
+        self.del_but.clicked.connect(self.del_path)
+        self.next_but.clicked.connect(self.next_path)
+        self.to_start_but.clicked.connect(self.to_start)
+        self.add_path_but.clicked.connect(self.add_path)
+        self.browse_img_but.clicked.connect(self.get_img)
+        self.browse_main_img_but.clicked.connect(self.get_main_img)
+        back_but.clicked.connect(self.back_path)
 
         save_act.triggered.connect(self.write_present)
         open_act.triggered.connect(self.load_present)
@@ -183,6 +187,13 @@ class newTC(QMainWindow):
     def check_box_reset(self):
         if self.cur_nest['path']:
             self.main_chk_box.setEnabled(True)
+            self.choice.setEnabled(True)
+            self.del_but.setEnabled(True)
+            self.next_but.setEnabled(True)
+            self.to_start_but.setEnabled(True)
+            self.browse_img_but.setEnabled(True)
+            self.browse_main_img_but.setEnabled(True)
+            self.change_choice_but.setEnabled(True)
             index = self.choice.currentIndex()
             if 'main' in self.cur_nest['path'][index]:
                 self.main_chk_box.setChecked(
@@ -192,6 +203,13 @@ class newTC(QMainWindow):
                 self.main_chk_box.setChecked(False)
         else:
             self.main_chk_box.setEnabled(False)
+            self.choice.setEnabled(False)
+            self.del_but.setEnabled(False)
+            self.next_but.setEnabled(False)
+            self.to_start_but.setEnabled(False)
+            self.browse_img_but.setEnabled(False)
+            self.browse_main_img_but.setEnabled(False)
+            self.change_choice_but.setEnabled(False)
 
     def actor_reset(self):
         if self.cur_nest['path']:
@@ -207,6 +225,7 @@ class newTC(QMainWindow):
 
     def main_img_dir_reset(self):
         if self.cur_nest['path']:
+            self.main_img_dir_line.setEnabled(True)
             index = self.choice.currentIndex()
             if 'main_img' in self.cur_nest['path'][index]:
                 self.main_img_dir_line.setText(
@@ -216,9 +235,12 @@ class newTC(QMainWindow):
                 self.main_img_dir_line.setText(
                     'img'
                 )
+        else:
+            self.main_img_dir_line.setEnabled(False)
 
     def img_dir_reset(self):
         if self.cur_nest['path']:
+            self.img_dir_line.setEnabled(True)
             index = self.choice.currentIndex()
             if 'main_img' in self.cur_nest['path'][index]:
                 self.img_dir_line.setText(
@@ -228,6 +250,8 @@ class newTC(QMainWindow):
                 self.img_dir_line.setText(
                     'img'
                 )
+        else:
+            self.img_dir_line.setEnabled(False)
 
     def choice_reset(self):
         self.choice.clear()
@@ -280,6 +304,7 @@ class newTC(QMainWindow):
 
     def next_path(self):
         if self.cur_nest['path']:
+            self.back.append(self.cur_path_index)
             self.cur_nest = self.cur_nest['path'][self.cur_path_index]
             print(self.cur_nest['choice_text'])
             self.choice_reset()
@@ -318,11 +343,19 @@ class newTC(QMainWindow):
         if self.cur_nest['path']:
             index = self.choice.currentIndex()
             self.cur_nest['path'].pop(index)
+            self.choice_reset()
+
+    def back_path(self):
+        if self.back:
+            self.cur_nest = self.nest
+            for n in self.back:
+                self.cur_nest = self.cur_nest['path'][n]
             self.check_box_reset()
             self.actor_reset()
             self.img_dir_reset()
             self.main_img_dir_reset()
             self.choice_reset()
+            self.back.pop()
 
     def get_img(self):
         dir_path = QFileDialog.getOpenFileName(
