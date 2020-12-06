@@ -15,7 +15,6 @@ class PlayUi(QMainWindow):
         self.root = root
         self.prompt = False
         self.end = False
-        self.clock = QTimer()
         self.mode = 0
         self.change_mode()
 
@@ -36,7 +35,6 @@ class PlayUi(QMainWindow):
         self.setFixedSize(600, 800)
         self.setCenter()
         self.setWindowTitle(root_directory.split('/')[-1].split('.')[0])
-
         self.play(self.root)
 
     def play(self, root):
@@ -47,40 +45,13 @@ class PlayUi(QMainWindow):
         if not root.is_end():
             if len(root) > 1:
                 self.prompt = True
-                self.statusBar().showMessage('Choose one of the messages')
-                hbox = QHBoxLayout()
-                vbox = QVBoxLayout()
-                vbox.setAlignment(Qt.AlignCenter)
-
-                for i, choice in enumerate(root.path):
-                    widget = QWidget()
-                    vbox_sub = QVBoxLayout()
-                    vbox_sub.setAlignment(Qt.AlignCenter)
-                    widget.setLayout(vbox_sub)
-
-                    btnLabel = QLabel(choice.choice_text)
-                    btnLabel.setObjectName('Choice')
-                    btnLabel.setAlignment(Qt.AlignCenter)
-                    btnLabel.setWordWrap(True)
-
-                    butt = QPushButton("Choose")
-                    butt.setObjectName('Choice')
-                    butt.clicked.connect(lambda ignore, arg=i: self.choose(arg))
-
-                    vbox.addWidget(btnLabel)
-                    vbox.addWidget(widget)
-                    vbox_sub.addWidget(butt)
-                hbox.addLayout(vbox)
-                self.box.addLayout(hbox)
-
+                QTimer.singleShot(1000, lambda: self.display_choice())
             elif len(root) != 0:
                 self.root = self.root.path[0]
         else:
             self.statusBar().showMessage('End of the story, press ESC to exit.')
             self.prompt = True
             self.end = True
-
-        """ STILL NEED TO ADD ACTION AFTER GAME ENDs"""
 
     def display_text(self, root, text=True):
         hbox = QHBoxLayout()
@@ -126,16 +97,42 @@ class PlayUi(QMainWindow):
             hbox.addLayout(vbox)
         self.box.addLayout(hbox)
 
+    def display_choice(self):
+        self.prompt = True
+        self.statusBar().showMessage('Choose one of the messages')
+        hbox = QHBoxLayout()
+        vbox = QVBoxLayout()
+        vbox.setAlignment(Qt.AlignCenter)
+
+        for i, choice in enumerate(self.root.path):
+            widget = QWidget()
+            vbox_sub = QVBoxLayout()
+            vbox_sub.setAlignment(Qt.AlignCenter)
+            widget.setLayout(vbox_sub)
+
+            btnLabel = QLabel(choice.choice_text)
+            btnLabel.setObjectName('Choice')
+            btnLabel.setAlignment(Qt.AlignCenter)
+            btnLabel.setWordWrap(True)
+
+            butt = QPushButton("Choose")
+            butt.setObjectName('Choice')
+            butt.clicked.connect(lambda ignore, arg=i: self.choose(arg))
+
+            vbox.addWidget(btnLabel)
+            vbox.addWidget(widget)
+            vbox_sub.addWidget(butt)
+        hbox.addLayout(vbox)
+        self.box.addLayout(hbox)
+
     def choose(self, arg):
         clearLayout(self.box.takeAt(self.box.count() - 1))
         self.display_text(self.root.path[arg], False)
-        self.prompt = False
         self.root = self.root.path[arg]
-        self.statusBar().showMessage('Press SPACE to continue.')
+        self.prompt = False
+        self.statusBar().showMessage('Press SPACE to continue. (Press M to change UI style)')
 
     def change_mode(self):
-
-        print(self.mode)
         mode = ['LIGHT', 'DARK']
         if self.mode < len(mode):
             if mode[self.mode] == 'LIGHT':
@@ -178,7 +175,7 @@ class PlayUi(QMainWindow):
     def dark_mode(self):
         self.setStyleSheet("""  
                 QWidget#Background {background-color: Gainsboro}
-
+                
                 QWidget { font-family: Comic Sans MS;}
 
                 QLabel#Actor { font: bold; }
