@@ -156,7 +156,7 @@ class newTC(QMainWindow):
         f_layout.addRow(self.text_line)
 
         # connect functions
-        self.text_line.textChanged.connect(self.change_choice_text)
+        # self.text_line.textChanged.connect(self.change_choice_text)
         self.choice.currentIndexChanged.connect(self.change_choice)
         self.change_choice_but.clicked.connect(self.change_choice_text)
 
