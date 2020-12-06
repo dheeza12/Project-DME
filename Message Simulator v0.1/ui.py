@@ -6,29 +6,34 @@ from main import TextAndChoice
 import json
 
 
-class PlayUi(QScrollArea):
+class PlayUi(QMainWindow):
     def __init__(self, root_directory):
         super().__init__()
         file = open(root_directory, 'r')
         file = json.load(file)
         root = TextAndChoice.decode(file)
         self.root = root
-        self.mainWidget = QWidget()
+
         self.show()
+        self.mainWidget = QWidget()
         self.box = QVBoxLayout()
         self.box.setSpacing(12)
         self.box.setAlignment(Qt.AlignTop)
         self.mainWidget.setLayout(self.box)
         self.mainWidget.setObjectName("Background")
-        self.statusBar
 
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setWidget(self.mainWidget)
+        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll_area.setFont(QFont('Arial', 18))
+
+        self.statusBar().showMessage('Message in statusbar.')
+
+        self.setCentralWidget(self.scroll_area)
         self.setFixedSize(600, 800)
-        self.setWidgetResizable(True)
         self.setCenter()
         self.setWindowTitle(root_directory.split('.')[0])
-        self.setWidget(self.mainWidget)
-        self.setFont(QFont('Arial', 18))
         self.setStyleSheet("""  
         QWidget#Background {background-color: Lightcyan}
         
