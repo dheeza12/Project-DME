@@ -2,9 +2,10 @@ import json
 
 
 class TextAndChoice:
-    def __init__(self, text="Welcome to the start", main=False, actor=None, img=None, choice_text=None, back=None):
+    def __init__(self, text="Welcome to the start", main=False, main_img=None, actor=None, img=None, choice_text=None, back=None):
         self.text = text
         self.main = main
+        self.main_img = main_img
         self.actor = actor
         self.img = img
         self.choice_text = choice_text
@@ -21,6 +22,7 @@ class TextAndChoice:
         path = []
         dict_['text'] = self.text
         dict_['main'] = self.main
+        dict_['main_img'] = self.main_img
         dict_['actor'] = self.actor
         dict_['img'] = self.img
         dict_['choice_text'] = self.choice_text
@@ -37,11 +39,13 @@ class TextAndChoice:
         actor = dict_['actor']
         img = dict_['img']
         choice_text = dict_['choice_text']
+        main = None
+        main_img = None
         if 'main' in dict_:
             main = dict_['main']
-        else:
-            main = None
-        root_create = TextAndChoice(text=text,actor=actor, main=main, img=img, choice_text=choice_text)
+        if 'main_img' in dict_:
+            main_img = dict_['main_img']
+        root_create = TextAndChoice(text=text,actor=actor, main=main, main_img=main_img, img=img, choice_text=choice_text)
         if len(dict_['path']) > 0:
             for x in dict_['path']:
                 root_create.add_path(root_create.decode(x))
