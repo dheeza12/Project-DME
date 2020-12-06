@@ -133,7 +133,7 @@ class PlayUi(QMainWindow):
         hbox.addWidget(bubble)
         hbox.setAlignment(Qt.AlignCenter)
         self.box.addLayout(hbox)
-        QTimer.singleShot(1500, lambda: func())
+        QTimer.singleShot(600, lambda: func())
 
     def choose(self, arg):
         clearLayout(self.box.takeAt(self.box.count() - 1))
