@@ -16,6 +16,8 @@ class PlayUi(QMainWindow):
         self.prompt = False
         self.end = False
         self.clock = QTimer()
+        self.mode = 0
+        self.change_mode()
 
         self.show()
         self.mainWidget = QWidget()
@@ -34,33 +36,6 @@ class PlayUi(QMainWindow):
         self.setFixedSize(600, 800)
         self.setCenter()
         self.setWindowTitle(root_directory.split('/')[-1].split('.')[0])
-        self.setStyleSheet("""  
-        QWidget#Background {background-color: Lightcyan}
-        
-        QWidget { font-family: Comic Sans MS;}
-        
-        QLabel#Actor { font: bold; }
-        
-        QLabel#Chat  { background-color: snow; color: black; font-size: 16px;
-            border-style: ridge; border-width: 5px; border-color: Mintcream; border-radius: 10px;
-            padding: 6px; padding-right: 12px; padding-left: 12px;
-            }
-        
-        QLabel#Choice { background-color: Deepskyblue; 
-            font-size: 18px; color: White; border-radius: 5px;
-            border-style: solid; border-width: 4px; border-color: deepskyblue;
-            min-width: 377; min-height: 64; padding-left: 20px; padding-right: 20px; padding-top: 10px;
-            padding-bottom: 5px;
-            } 
-                                                    
-        QPushButton#Choice { background-color: Azure; font-size: 16px; font: bold; 
-            border-style: outset; border-width: 6px; border-color: Aqua; border-radius: 15px;
-            min-width: 240px; min-height: 32px;
-            }
-        
-        QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Chartreuse;
-            }
-                            """)
 
         self.play(self.root)
 
@@ -68,7 +43,7 @@ class PlayUi(QMainWindow):
         self.prompt = False
         self.root = root
         self.display_text(root)
-        self.statusBar().showMessage('Press SPACE to continue.')
+        self.statusBar().showMessage('Press SPACE to continue. (Press M to change UI style)')
         if not root.is_end():
             if len(root) > 1:
                 self.prompt = True
@@ -158,6 +133,79 @@ class PlayUi(QMainWindow):
         self.root = self.root.path[arg]
         self.statusBar().showMessage('Press SPACE to continue.')
 
+    def change_mode(self):
+
+        print(self.mode)
+        mode = ['LIGHT', 'DARK']
+        if self.mode < len(mode):
+            if mode[self.mode] == 'LIGHT':
+                self.light_mode()
+            else:
+                self.dark_mode()
+            self.mode += 1
+        if self.mode == len(mode):
+            self.mode = 0
+
+    def light_mode(self):
+        self.setStyleSheet("""  
+                QWidget#Background {background-color: Lightcyan;}
+
+                QWidget { font-family: Comic Sans MS;}
+
+                QLabel#Actor { font: bold; }
+
+                QLabel#Chat  { background-color: snow; color: black; font-size: 16px;
+                    border-style: ridge; border-width: 5px; border-color: Mintcream; border-radius: 10px;
+                    padding: 6px; padding-right: 12px; padding-left: 12px;
+                    }
+
+                QLabel#Choice { background-color: Deepskyblue; 
+                    font-size: 18px; color: White; border-radius: 5px;
+                    border-style: solid; border-width: 4px; border-color: deepskyblue;
+                    min-width: 377; min-height: 64; padding-left: 20px; padding-right: 20px; padding-top: 10px;
+                    padding-bottom: 5px;
+                    } 
+
+                QPushButton#Choice { background-color: Azure; font-size: 16px; font: bold; 
+                    border-style: outset; border-width: 6px; border-color: Aqua; border-radius: 15px;
+                    min-width: 240px; min-height: 32px;
+                    }
+
+                QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Chartreuse;
+                    }
+                                    """)
+        return 'LIGHT'
+
+    def dark_mode(self):
+        self.setStyleSheet("""  
+                QWidget#Background {background-color: Gainsboro}
+
+                QWidget { font-family: Comic Sans MS;}
+
+                QLabel#Actor { font: bold; }
+
+                QLabel#Chat  { background-color: snow; color: black; font-size: 16px;
+                    border-style: ridge; border-width: 5px; border-color: Black; border-radius: 10px;
+                    padding: 6px; padding-right: 12px; padding-left: 12px;
+                    }
+
+                QLabel#Choice { background-color: Dimgray; 
+                    font-size: 18px; color: White; border-radius: 5px;
+                    border-style: solid; border-width: 4px; border-color: Black;
+                    min-width: 377; min-height: 64; padding-left: 20px; padding-right: 20px; padding-top: 10px;
+                    padding-bottom: 5px;
+                    } 
+
+                QPushButton#Choice { background-color: White; font-size: 16px; font: bold; 
+                    border-style: outset; border-width: 6px; border-color: Black; border-radius: 15px;
+                    min-width: 240px; min-height: 32px;
+                    }
+
+                QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Lightcoral;
+                    }
+                                    """)
+        return 'DARK'
+
     def setCenter(self):
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
@@ -167,8 +215,10 @@ class PlayUi(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Space and not self.prompt:
             self.play(self.root)
-        if event.key() == Qt.Key_Escape and self.end:
+        elif event.key() == Qt.Key_Escape and self.end:
             self.close()
+        elif event.key() == Qt.Key_M:
+            self.change_mode()
 
 
 def clearLayout(layout):  # http://josbalcaen.com/maya-python-pyqt-delete-all-widgets-in-a-layout/
