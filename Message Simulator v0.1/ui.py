@@ -7,9 +7,9 @@ import json
 
 
 class PlayUi(QScrollArea):
-    def __init__(self, rootdirectory):
+    def __init__(self, root_directory):
         super().__init__()
-        file = open(rootdirectory, 'r')
+        file = open(root_directory, 'r')
         file = json.load(file)
         root = TextAndChoice.decode(file)
         self.root = root
@@ -24,7 +24,7 @@ class PlayUi(QScrollArea):
         self.setFixedSize(600, 800)
         self.setWidgetResizable(True)
         self.setCenter()
-        self.setWindowTitle(rootdirectory.split('.')[0])
+        self.setWindowTitle(root_directory.split('.')[0])
         self.setWidget(self.mainWidget)
         self.setFont(QFont('Helvetica', 18))
         self.setStyleSheet("""  
@@ -44,12 +44,10 @@ class PlayUi(QScrollArea):
                                                     
         QPushButton#Choice { background-color: Azure; font-size: 16px; font-family: Arial; font: bold; 
             border-style: outset; border-width: 6px; border-color: Aqua; border-radius: 15px;
-            padding: 10px;
+            min-width: 240px; min-height: 32px;
             }
-        QPushButton#Choice:hover { background-color: Mintcream; border-color: Chartreuse;}
         
-        
-            }
+        QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Chartreuse;}
                             """)
 
         self.play(self.root)
