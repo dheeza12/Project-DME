@@ -33,7 +33,7 @@ class PlayUi(QMainWindow):
         self.setCentralWidget(self.scroll_area)
         self.setFixedSize(600, 800)
         self.setCenter()
-        self.setWindowTitle(root_directory.split('.')[0])
+        self.setWindowTitle(root_directory.split('/')[-1].split('.')[0])
         self.setStyleSheet("""  
         QWidget#Background {background-color: Lightcyan}
         
