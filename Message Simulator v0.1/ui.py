@@ -14,6 +14,7 @@ class PlayUi(QMainWindow):
         root = TextAndChoice.decode(file)
         self.root = root
         self.prompt = False
+        self.end = False
         self.clock = QTimer()
 
         self.show()
@@ -102,6 +103,7 @@ class PlayUi(QMainWindow):
         else:
             self.statusBar().showMessage('End of the story, press ESC to exit.')
             self.prompt = True
+            self.end = True
 
         """ STILL NEED TO ADD ACTION AFTER GAME ENDs"""
 
@@ -163,8 +165,10 @@ class PlayUi(QMainWindow):
         self.move(qtRectangle.topLeft())
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Space and self.prompt is False:
+        if event.key() == Qt.Key_Space and not self.prompt:
             self.play(self.root)
+        if event.key() == Qt.Key_Escape and self.end:
+            self.close()
 
 
 def clearLayout(layout):  # http://josbalcaen.com/maya-python-pyqt-delete-all-widgets-in-a-layout/
