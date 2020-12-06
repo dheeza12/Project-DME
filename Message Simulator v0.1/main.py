@@ -37,7 +37,8 @@ class TextAndChoice:
         actor = dict_['actor']
         img = dict_['img']
         choice_text = dict_['choice_text']
-        root_create = TextAndChoice(text=text,actor=actor, img=img, choice_text=choice_text)
+        main = dict_['main']
+        root_create = TextAndChoice(text=text,actor=actor, main=main, img=img, choice_text=choice_text)
         if len(dict_['path']) > 0:
             for x in dict_['path']:
                 root_create.add_path(root_create.decode(x))
