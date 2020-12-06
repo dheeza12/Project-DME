@@ -62,18 +62,23 @@ class PlayUi(QMainWindow):
             vbox.addWidget(actor_label)
             if root.main:
                 actor_label.setAlignment(Qt.AlignRight)
+
         line_label = QLabel(root.choice_text)
+
         if root.text:
             if text:
                 line_label = QLabel(root.text)
+                line_label.setWordWrap(True)
+                line_label.setMinimumWidth(250)
+                line_label.setAlignment(Qt.AlignCenter)
             line_label.setObjectName('Chat')
-            line_label.setWordWrap(True)
             vbox.addWidget(line_label)
 
             if root.img:
                 pix_map = QPixmap(root.img)
             else:
                 pix_map = QPixmap('Content/default_avatar.png')
+
             pix_map = pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
             pix_label = QLabel()
             pix_label.setPixmap(pix_map)
