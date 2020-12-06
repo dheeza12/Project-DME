@@ -16,6 +16,7 @@ class PlayUi(QScrollArea):
         self.mainWidget = QWidget()
         self.show()
         self.box = QVBoxLayout()
+        self.box.setSpacing(12)
         self.box.setAlignment(Qt.AlignTop)
         self.mainWidget.setLayout(self.box)
         self.mainWidget.setObjectName("Background")
@@ -26,9 +27,11 @@ class PlayUi(QScrollArea):
         self.setCenter()
         self.setWindowTitle(root_directory.split('.')[0])
         self.setWidget(self.mainWidget)
-        self.setFont(QFont('Helvetica', 18))
+        self.setFont(QFont('Arial', 18))
         self.setStyleSheet("""  
         QWidget#Background {background-color: Lightcyan}
+        
+        QLabel#Actor { font: bold; }
         
         QLabel#Label  { background-color: snow; color: black; font-size: 16px;
             border-style: ridge; border-width: 5px; border-color: Mintcream; border-radius: 10px;
@@ -47,7 +50,8 @@ class PlayUi(QScrollArea):
             min-width: 240px; min-height: 32px;
             }
         
-        QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Chartreuse;}
+        QPushButton#Choice:hover:!pressed { background-color: Snow; border-color: Chartreuse;
+            }
                             """)
 
         self.play(self.root)
@@ -59,6 +63,8 @@ class PlayUi(QScrollArea):
             actor_label = QLabel(root.actor+':')
             actor_label.setObjectName('Actor')
             vbox.addWidget(actor_label)
+            if root.main:
+                actor_label.setAlignment(Qt.AlignRight)
         line_label = QLabel(str(root))
         line_label.setObjectName('Label')
         line_label.setWordWrap(True)
