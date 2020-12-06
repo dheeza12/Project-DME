@@ -13,6 +13,8 @@ class PlayUi(QMainWindow):
         file = json.load(file)
         root = TextAndChoice.decode(file)
         self.root = root
+        self.prompt = False
+        self.clock = QTimer()
 
         self.show()
         self.mainWidget = QWidget()
@@ -26,9 +28,6 @@ class PlayUi(QMainWindow):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setWidget(self.mainWidget)
         self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scroll_area.setFont(QFont('Arial', 18))
-
-        self.statusBar().showMessage('Message in statusbar.')
 
         self.setCentralWidget(self.scroll_area)
         self.setFixedSize(600, 800)
@@ -36,6 +35,8 @@ class PlayUi(QMainWindow):
         self.setWindowTitle(root_directory.split('/')[-1].split('.')[0])
         self.setStyleSheet("""  
         QWidget#Background {background-color: Lightcyan}
+        
+        QWidget { font-family: Comic Sans MS;}
         
         QLabel#Actor { font: bold; }
         
@@ -51,7 +52,7 @@ class PlayUi(QMainWindow):
             padding-bottom: 5px;
             } 
                                                     
-        QPushButton#Choice { background-color: Azure; font-size: 16px; font-family: Arial; font: bold; 
+        QPushButton#Choice { background-color: Azure; font-size: 16px; font: bold; 
             border-style: outset; border-width: 6px; border-color: Aqua; border-radius: 15px;
             min-width: 240px; min-height: 32px;
             }
@@ -63,9 +64,14 @@ class PlayUi(QMainWindow):
         self.play(self.root)
 
     def play(self, root):
+        self.prompt = False
+        self.root = root
         self.display_text(root)
+        self.statusBar().showMessage('Press SPACE to continue.')
         if not root.is_end():
             if len(root) > 1:
+                self.prompt = True
+                self.statusBar().showMessage('Choose one of the messages')
                 hbox = QHBoxLayout()
                 vbox = QVBoxLayout()
                 vbox.setAlignment(Qt.AlignCenter)
@@ -83,7 +89,7 @@ class PlayUi(QMainWindow):
 
                     butt = QPushButton("Choose")
                     butt.setObjectName('Choice')
-                    butt.clicked.connect(lambda ignore, current_root=root, arg=i: self.choose(current_root, arg))
+                    butt.clicked.connect(lambda ignore, arg=i: self.choose(arg))
 
                     vbox.addWidget(btnLabel)
                     vbox.addWidget(widget)
@@ -92,9 +98,10 @@ class PlayUi(QMainWindow):
                 self.box.addLayout(hbox)
 
             elif len(root) != 0:
-                self.play(root.path[0])
+                self.root = self.root.path[0]
         else:
-            pass
+            self.statusBar().showMessage('End of the story, press ESC to exit.')
+            self.prompt = True
 
         """ STILL NEED TO ADD ACTION AFTER GAME ENDs"""
 
@@ -142,10 +149,12 @@ class PlayUi(QMainWindow):
             hbox.addLayout(vbox)
         self.box.addLayout(hbox)
 
-    def choose(self, root, arg):
+    def choose(self, arg):
         clearLayout(self.box.takeAt(self.box.count() - 1))
-        self.display_text(root.path[arg], False)
-        self.play(root.path[arg])
+        self.display_text(self.root.path[arg], False)
+        self.prompt = False
+        self.root = self.root.path[arg]
+        self.statusBar().showMessage('Press SPACE to continue.')
 
     def setCenter(self):
         qtRectangle = self.frameGeometry()
@@ -153,9 +162,13 @@ class PlayUi(QMainWindow):
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Space and self.prompt is False:
+            self.play(self.root)
 
-def clearLayout(layout):    # http://josbalcaen.com/maya-python-pyqt-delete-all-widgets-in-a-layout/
-    while layout.count():   # special thank!
+
+def clearLayout(layout):  # http://josbalcaen.com/maya-python-pyqt-delete-all-widgets-in-a-layout/
+    while layout.count():  # special thank!
         child = layout.takeAt(0)
         if child.widget() is not None:
             child.widget().deleteLater()
@@ -164,7 +177,6 @@ def clearLayout(layout):    # http://josbalcaen.com/maya-python-pyqt-delete-all-
 
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     play = PlayUi('IamDME.json')
     sys.exit(app.exec_())
