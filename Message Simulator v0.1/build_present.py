@@ -3,7 +3,7 @@ import json
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QFormLayout,
     QHBoxLayout, QLineEdit, QTextEdit, QComboBox, QPushButton,
-    QCheckBox, QFileDialog, QAction
+    QCheckBox, QFileDialog, QAction, QLabel
 )
 
 
@@ -94,6 +94,7 @@ class newTC(QMainWindow):
         file_menu.addAction(open_act)
 
         # init buttons combobox and lines
+        choice_label = QLabel('Inside Choice:')
         self.choice = self.new_combo_box(200, 45)
         self.text_line = self.new_text_edit(self.cur_nest['text'])
         self.choice_line = self.new_line_edit(
@@ -115,7 +116,7 @@ class newTC(QMainWindow):
         self.choice_line.setEnabled(False)
 
         # set formlayout
-        f_layout.addRow(self.choice_line)
+        f_layout.addRow(choice_label, self.choice_line)
 
         f_layout.addRow(self.actor_line)
         hbox = QHBoxLayout()
@@ -291,11 +292,11 @@ class newTC(QMainWindow):
             self, "Choose Image Directory", "D:\\"
         )
         if dir_path[0]:
-            self.main_img_dir_line.setText(dir_path[0])
+            self.img_dir_line.setText(dir_path[0])
             print(dir_path)
 
     def get_main_img(self):
-        dir_path = QFileDialog.getSaveFileName(
+        dir_path = QFileDialog.getOpenFileName(
             self, "Choose Image Directory", "D:\\"
         )
         if dir_path[0]:
