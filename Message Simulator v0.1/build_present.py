@@ -8,12 +8,12 @@ from PyQt5.QtWidgets import (
 
 
 static_nest = {
-    "text": "New_text",
+    "text": "",
     "main": False,
-    "main_img": "img",
-    "actor": "Character Name",
-    "img": "img",
-    "choice_text": "New_choice",
+    "main_img": "",
+    "actor": "",
+    "img": "",
+    "choice_text": "",
 
     "path": []
 }
@@ -30,14 +30,14 @@ class newTC(QMainWindow):
         self.init_ui()
 
     @staticmethod
-    def new_line_edit(text="Text", min_w=100, min_h=10):
+    def new_line_edit(text="", min_w=100, min_h=10):
         a_line = QLineEdit(text)
         a_line.setMinimumWidth(min_w)
         a_line.setMinimumHeight(min_h)
         return a_line
 
     @staticmethod
-    def new_text_edit(text="Text", min_w=100, min_h=100):
+    def new_text_edit(text="", min_w=100, min_h=100):
         t_line = QTextEdit(text)
         t_line.setMinimumWidth(min_w)
         t_line.setMinimumHeight(min_h)
@@ -51,7 +51,7 @@ class newTC(QMainWindow):
         return cbox
 
     @staticmethod
-    def new_button(text="Button", min_w=20, min_h=5):
+    def new_button(text="", min_w=20, min_h=5):
         button = QPushButton(text)
         button.setMinimumWidth(min_w)
         button.setMinimumHeight(min_h)
@@ -94,21 +94,35 @@ class newTC(QMainWindow):
         file_menu.addAction(open_act)
 
         # init buttons combobox and lines
-        choice_label = QLabel('Inside Choice:')
-        self.choice = self.new_combo_box(200, 45)
-        self.text_line = self.new_text_edit(self.cur_nest['text'])
+        choice_line_label = QLabel('Inside Choice:')
+        choice_label = QLabel('A choice to next path:')
+        self.choice = self.new_combo_box(200, 20)
+        self.text_line = self.new_text_edit()
+        self.text_line.setPlaceholderText(
+            "This is the text that will "
+            "appear when the player have "
+            "chosen this path."
+        )
         self.choice_line = self.new_line_edit(
             self.cur_nest['choice_text'], 150, 30
         )
-        self.actor_line = self.new_line_edit('Name')
+        self.actor_line = self.new_line_edit()
+        self.actor_line.setPlaceholderText('Character Name')
         self.main_img_dir_line = self.new_line_edit()
+        self.main_img_dir_line.setPlaceholderText(
+            'image dir for main character'
+        )
         self.img_dir_line = self.new_line_edit()
+        self.img_dir_line.setPlaceholderText(
+            'image dir for a character'
+        )
         self.main_chk_box = QCheckBox('Is Main?')
 
         browse_img_but = self.new_button('Browse')
         browse_main_img_but = self.new_button('Browse')
-        change_choice_but = self.new_button('Apply Change Choice Text')
+        self.change_choice_but = self.new_button('Apply Change Choice Text')
         next_but = self.new_button('Next Path')
+        del_but = self.new_button('Delete Path')
         to_start_but = self.new_button('To Start')
         add_path_but = self.new_button('Add new Choice')
 
@@ -116,7 +130,7 @@ class newTC(QMainWindow):
         self.choice_line.setEnabled(False)
 
         # set formlayout
-        f_layout.addRow(choice_label, self.choice_line)
+        f_layout.addRow(choice_line_label, self.choice_line)
 
         f_layout.addRow(self.actor_line)
         hbox = QHBoxLayout()
@@ -127,20 +141,23 @@ class newTC(QMainWindow):
         hbox.addWidget(self.img_dir_line)
         f_layout.addRow(hbox)
 
-        f_layout.addRow(self.choice)
-        f_layout.addRow(change_choice_but)
+        f_layout.addRow(choice_label, self.choice)
+        f_layout.addRow(self.change_choice_but)
 
         hbox = QHBoxLayout()
         hbox.addWidget(next_but)
+        hbox.addWidget(del_but)
         hbox.addWidget(to_start_but)
         hbox.addWidget(add_path_but)
         f_layout.addRow(hbox)
         f_layout.addRow(self.text_line)
 
         # connect functions
+        self.text_line.textChanged.connect(self.change_choice_text)
         self.choice.currentIndexChanged.connect(self.change_choice)
-        change_choice_but.clicked.connect(self.change_choice_text)
+        self.change_choice_but.clicked.connect(self.change_choice_text)
 
+        del_but.clicked.connect(self.del_path)
         next_but.clicked.connect(self.next_path)
         to_start_but.clicked.connect(self.to_start)
         add_path_but.clicked.connect(self.add_path)
@@ -219,6 +236,11 @@ class newTC(QMainWindow):
 
     def change_choice(self):
         sender = self.sender()
+        self.text_line.setPlaceholderText(
+            "This is the text that will "
+            "appear when the player have "
+            "chosen this path({})".format(self.choice.currentText())
+        )
         index = sender.currentIndex()
         self.cur_path_index = index
         if self.cur_nest['path']:
@@ -231,6 +253,11 @@ class newTC(QMainWindow):
         self.main_img_dir_reset()
 
     def change_choice_text(self):
+        self.text_line.setPlaceholderText(
+            "This is the text that will "
+            "appear when the player have "
+            "chosen this path({})".format(self.choice.currentText())
+        )
         index = self.choice.currentIndex()
         self.choice.setItemText(
             index, self.choice.currentText()
@@ -264,7 +291,7 @@ class newTC(QMainWindow):
 
     def to_start(self):
         self.cur_nest = self.nest
-        self.choice_line.clear()
+        # self.choice_line.clear()
         self.check_box_reset()
         self.actor_reset()
         self.img_dir_reset()
@@ -273,12 +300,12 @@ class newTC(QMainWindow):
 
     def add_path(self):
         new_nest = {
-            "text": "New_text",
+            "text": "",
             "main": False,
-            "main_img": "img",
-            "actor": "Character Name",
-            "img": "img",
-            "choice_text": "New_choice",
+            "main_img": "",
+            "actor": "",
+            "img": "",
+            "choice_text": "",
 
             "path": []
         }
@@ -286,6 +313,16 @@ class newTC(QMainWindow):
         self.choice_reset()
         self.img_dir_reset()
         self.main_img_dir_reset()
+
+    def del_path(self):
+        if self.cur_nest['path']:
+            index = self.choice.currentIndex()
+            self.cur_nest['path'].pop(index)
+            self.check_box_reset()
+            self.actor_reset()
+            self.img_dir_reset()
+            self.main_img_dir_reset()
+            self.choice_reset()
 
     def get_img(self):
         dir_path = QFileDialog.getOpenFileName(

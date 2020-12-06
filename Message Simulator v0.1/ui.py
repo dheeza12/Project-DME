@@ -227,5 +227,5 @@ def clearLayout(layout):  # http://josbalcaen.com/maya-python-pyqt-delete-all-wi
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    play = PlayUi('IamDME.json')
+    play = PlayUi('helpgamer.json')
     sys.exit(app.exec_())
