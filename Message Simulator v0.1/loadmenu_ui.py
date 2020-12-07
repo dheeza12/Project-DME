@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QMainWindow
 from mainmenu_ui import *
 import sys
-from ui import *
+
 
 
 class Loadmenu(QMainWindow):
@@ -16,7 +16,7 @@ class Loadmenu(QMainWindow):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(-60, -110, 700, 900))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("bg3.jpg"))
+        self.label.setPixmap(QtGui.QPixmap("resources/bg3.jpg"))
         self.label.setObjectName("label")
         self.loadnovel = QtWidgets.QLabel(self.centralwidget)
         self.loadnovel.setGeometry(QtCore.QRect(210, 30, 211, 101))
