@@ -37,6 +37,7 @@ class Mainwindow(QMainWindow):
         self.story1.setObjectName("story1")
         self.story1.clicked.connect(self.story1clicked)
         self.story2 = QtWidgets.QPushButton(self.centralwidget)
+        self.story2.clicked.connect(self.story2clicked)
         self.story2.setGeometry(QtCore.QRect(225, 350, 150, 70))
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -48,6 +49,7 @@ class Mainwindow(QMainWindow):
         self.story2.setText("")
         self.story2.setObjectName("story2")
         self.story3 = QtWidgets.QPushButton(self.centralwidget)
+        self.story3.clicked.connect(self.story3clicked)
         self.story3.setGeometry(QtCore.QRect(225, 490, 150, 70))
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -153,11 +155,11 @@ class Mainwindow(QMainWindow):
 
     def story2clicked(self):
         self.close()
-        PlayUi()
+        self.open2 = PlayUi('.\saves\story2.json')
 
     def story3clicked(self):
         self.close()
-        PlayUi()
+        self.open1 = PlayUi(".\saves\lefthouse2.json")
 
     def quit_clicked(self, event):
         close = QMessageBox()
