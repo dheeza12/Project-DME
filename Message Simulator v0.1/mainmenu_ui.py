@@ -1,5 +1,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QMainWindow
+import sys
+
+sys.path.append('./packages')
+
 from loadmenu_ui import *
 from ui import PlayUi
 from build_present import newTC
