@@ -1,2 +1,2 @@
 # Project-DME
-Download only Message Simulator v1
+MAIN PROGRAM IS mainmenu_ui.py IN "Project-DME/Message Simulator v1/" 
