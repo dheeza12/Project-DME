@@ -1,7 +1,12 @@
-import sys
+import sys, os
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+
+sys.path.append('...')
+
+
 from main import TextAndChoice
 import json
 
@@ -77,7 +82,7 @@ class PlayUi(QMainWindow):
             if root.img:    # add img
                 pix_map = QPixmap(root.img)
             else:
-                pix_map = QPixmap('Content/default_avatar.png')
+                pix_map = QPixmap('./Content/default_avatar.png')
 
             pix_map = pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
             pix_label = QLabel()
@@ -87,7 +92,7 @@ class PlayUi(QMainWindow):
             if root.main_img:   # main char img
                 main_pix_map = QPixmap(root.main_img)
             else:
-                main_pix_map = QPixmap('Content/default_avatar.png')
+                main_pix_map = QPixmap('./Content/default_avatar.png')
             main_pix_map = main_pix_map.scaled(64, 64, Qt.IgnoreAspectRatio, Qt.FastTransformation)
             main_pix_label = QLabel()
             main_pix_label.setPixmap(main_pix_map)
@@ -243,5 +248,5 @@ def clearLayout(layout):  # http://josbalcaen.com/maya-python-pyqt-delete-all-wi
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    play = PlayUi('IamDME.json')
+    play = PlayUi('..\saves\IamDME.json')
     sys.exit(app.exec_())
