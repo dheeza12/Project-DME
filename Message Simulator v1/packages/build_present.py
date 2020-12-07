@@ -5,10 +5,11 @@ from PyQt5.QtWidgets import (
     QHBoxLayout, QLineEdit, QTextEdit, QComboBox, QPushButton,
     QCheckBox, QFileDialog, QAction, QLabel
 )
+from PyQt5.QtCore import QDir
 
 
 static_nest = {
-    "text": "A New Story",
+    "text": "",
     "main": False,
     "main_img": "",
     "actor": "",
@@ -57,6 +58,17 @@ class newTC(QMainWindow):
         button.setMinimumWidth(min_w)
         button.setMinimumHeight(min_h)
         return button
+
+    def new_present(self):
+        self.nest = static_nest
+        self.cur_nest = self.nest
+        self.cur_path_index = 0
+
+        self.choice_reset()
+        self.check_box_reset()
+        self.actor_reset()
+        self.img_dir_reset()
+        self.main_img_dir_reset()
 
     def json_out(self, file_name):
         f = open(file_name, 'r')
@@ -121,9 +133,11 @@ class newTC(QMainWindow):
 
         self.browse_img_but = self.new_button('Browse')
         self.browse_main_img_but = self.new_button('Browse')
-        self.change_choice_but = self.new_button('Apply Change Choice Text')
-        self.next_but = self.new_button('Next Path')
-        self.del_but = self.new_button('Delete Path')
+        self.change_choice_but = self.new_button(
+            'Apply Change Choice Text(Apply everytime when make changes)'
+        )
+        self.next_but = self.new_button('Go in to this Choice')
+        self.del_but = self.new_button('Delete Selected Choice')
         self.to_start_but = self.new_button('To Start')
         self.add_path_but = self.new_button('Add new Choice')
         back_but = self.new_button('Back')
@@ -155,6 +169,10 @@ class newTC(QMainWindow):
         f_layout.addRow(hbox)
         f_layout.addRow(self.text_line)
 
+        self.change_choice_but.setStyleSheet(
+            "background-color: lightgreen"
+        )
+
         # connect functions
         # self.text_line.textChanged.connect(self.change_choice_text)
         self.choice.currentIndexChanged.connect(self.change_choice)
@@ -181,12 +199,14 @@ class newTC(QMainWindow):
         self.widget.setLayout(f_layout)
         self.setCentralWidget(self.widget)
         self.resize(600, 800)
-        self.setWindowTitle('stregum')
+        self.setWindowTitle('Create Present')
         self.show()
 
     def check_box_reset(self):
         if self.cur_nest['path']:
             self.main_chk_box.setEnabled(True)
+            self.actor_line.setEnabled(True)
+            self.text_line.setEnabled(True)
             self.choice.setEnabled(True)
             self.del_but.setEnabled(True)
             self.next_but.setEnabled(True)
@@ -194,6 +214,9 @@ class newTC(QMainWindow):
             self.browse_img_but.setEnabled(True)
             self.browse_main_img_but.setEnabled(True)
             self.change_choice_but.setEnabled(True)
+            self.add_path_but.setStyleSheet(
+                "background-color: white"
+            )
             index = self.choice.currentIndex()
             if 'main' in self.cur_nest['path'][index]:
                 self.main_chk_box.setChecked(
@@ -203,6 +226,8 @@ class newTC(QMainWindow):
                 self.main_chk_box.setChecked(False)
         else:
             self.main_chk_box.setEnabled(False)
+            self.actor_line.setEnabled(False)
+            self.text_line.setEnabled(False)
             self.choice.setEnabled(False)
             self.del_but.setEnabled(False)
             self.next_but.setEnabled(False)
@@ -210,6 +235,9 @@ class newTC(QMainWindow):
             self.browse_img_but.setEnabled(False)
             self.browse_main_img_but.setEnabled(False)
             self.change_choice_but.setEnabled(False)
+            self.add_path_but.setStyleSheet(
+                "background-color: lightgreen"
+            )
 
     def actor_reset(self):
         if self.cur_nest['path']:
@@ -374,16 +402,28 @@ class newTC(QMainWindow):
             print(dir_path)
 
     def write_present(self):
+        dir_now = QDir()
+        dir_now = QDir(dir_now.currentPath())
+        dir_now.cdUp()
+        dir_path = dir_now.path()
+        print(dir_path)
+        dir_saves = dir_now.path() + "/saves"
         dir_path = QFileDialog.getSaveFileName(
-            self, "Choose Image Directory", "D:\\", "Json files (*.json)"
+            self, "Choose Image Directory", dir_saves, "Json files (*.json)"
         )
         if dir_path[0]:
             self.json_in(dir_path[0], self.nest)
             print(dir_path)
 
     def load_present(self):
+        dir_now = QDir()
+        dir_now = QDir(dir_now.currentPath())
+        dir_now.cdUp()
+        dir_path = dir_now.path()
+        print(dir_path)
+        dir_saves = dir_now.path() + "/saves"
         dir_path = QFileDialog.getOpenFileName(
-            self, "Choose Image Directory", "D:\\", "Json files (*.json)"
+            self, "Choose Image Directory", dir_saves, "Json files (*.json)"
         )
         if dir_path[0]:
             self.json_out(dir_path[0])
