@@ -1,2 +1,2 @@
 # Project-DME
-GO TO MESSAGE SIMULATOR FOR GAME
+Download only Message Simulator
