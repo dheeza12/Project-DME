@@ -12,11 +12,9 @@ class TextAndChoice:
 
         self.back = back
         self.path = []
-
     """ 
         Encode to dict for JSON dump
     """
-
     def encode(self):
         dict_ = {}
         path = []
@@ -31,7 +29,7 @@ class TextAndChoice:
         dict_['path'] = path
         return dict_
     """
-        Decode from dict to construct the TextAndChoice
+        Decode from dict to construct the TextAndChoice Obj
     """
     @staticmethod
     def decode(dict_):

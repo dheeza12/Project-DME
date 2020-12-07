@@ -53,9 +53,10 @@ class PlayUi(QMainWindow):
             self.prompt = True
             self.end = True
 
-    def display_text(self, root, text=True):
+    def display_text(self, root, text=True):    # False for displaying what the player chose
         hbox = QHBoxLayout()
         vbox = QVBoxLayout()
+
         if root.actor and text:  # ADD NAME IF EXISTED
             actor_label = QLabel(root.actor + ':')
             actor_label.setObjectName('Actor')
@@ -63,9 +64,8 @@ class PlayUi(QMainWindow):
             if root.main:
                 actor_label.setAlignment(Qt.AlignRight)
 
-        line_label = QLabel(root.choice_text)
-
-        if root.text:
+        if root.text:   # if root.text is not None
+            line_label = QLabel(root.choice_text)
             if text:
                 line_label = QLabel(root.text)
                 line_label.setWordWrap(True)
@@ -74,7 +74,7 @@ class PlayUi(QMainWindow):
             line_label.setObjectName('Chat')
             vbox.addWidget(line_label)
 
-            if root.img:
+            if root.img:    # add img
                 pix_map = QPixmap(root.img)
             else:
                 pix_map = QPixmap('Content/default_avatar.png')
@@ -84,7 +84,7 @@ class PlayUi(QMainWindow):
             pix_label.setPixmap(pix_map)
             pix_label.setObjectName('Pixmap')
 
-            if root.main_img:
+            if root.main_img:   # main char img
                 main_pix_map = QPixmap(root.main_img)
             else:
                 main_pix_map = QPixmap('Content/default_avatar.png')
@@ -243,5 +243,5 @@ def clearLayout(layout):  # http://josbalcaen.com/maya-python-pyqt-delete-all-wi
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    play = PlayUi('Test3.json')
+    play = PlayUi('IamDME.json')
     sys.exit(app.exec_())
